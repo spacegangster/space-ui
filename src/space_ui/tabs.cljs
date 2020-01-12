@@ -1,4 +1,4 @@
-(ns crux-ui.views.commons.tabs
+(ns space-ui.tabs
   (:require [garden.core :as garden]
             [reagent.core :as r]))
 

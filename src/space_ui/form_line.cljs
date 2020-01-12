@@ -1,4 +1,4 @@
-(ns crux-ui.views.commons.form-line
+(ns space-ui.form-line
   (:require [clojure.string :as s]))
 
 (defn line [{:keys [on-reset css-class label control hint]}]

@@ -1,4 +1,5 @@
-(ns crux-ui.views.commons.datepicker-native
+(ns space-ui.datepicker-native
+  "Bindigns to native datetime picker, yet to polish and test"
   (:require [garden.core :as garden]
             [garden.stylesheet :as gs]
             [crux-ui.logging :as log]
@@ -49,8 +50,8 @@
           :letter-spacing :0.09em
           :color :gray}]
         ["> .native-date-time-picker__input"
-         {:line-height :32px
-          }]]))])
+         {:line-height :32px}]]))])
+
 
 
 (defn picker

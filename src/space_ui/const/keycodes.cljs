@@ -1,4 +1,4 @@
-(ns crux-ui.views.commons.keycodes)
+(ns space-ui.const.keycodes)
 
 (def kc->kw
   {3  ::break

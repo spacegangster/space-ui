@@ -1,4 +1,7 @@
-(ns crux-ui.views.commons.tiny-components
+(ns space-ui.tiny-components
+  "Icon
+   Links (mailto, outer, boxy)
+   Button (textual, Call To Action, bordered)"
   (:require [re-frame.core :as rf]
             [crux-ui.views.functions :as vu]
             [garden.core :as garden]
