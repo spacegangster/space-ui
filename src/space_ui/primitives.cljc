@@ -10,6 +10,7 @@
 (defn vh [x] (str (float x) "vh"))
 (defn px [x] (str (float x) "px"))
 (defn em [x] (str (float x) "em"))
+(defn pc [x] (str (float x) "%"))
 (defn ms [x] (str (float x) "ms"))
 
 (defn rotate-z [deg]
@@ -20,11 +21,23 @@
   (str "rotateY(" deg "deg)"))
 
 (defn translate-z [px]
-  (str "translateZ(" px "px)"))
+  (str "translateZ(" px
+       (if-not (string? px) "px")
+       ")"))
+
 (defn translate-x [px]
-  (str "translateX(" px "px)"))
+  (str "translateX(" px
+       (if-not (string? px) "px")
+       ")"))
+
 (defn translate-y [px]
-  (str "translateY(" px "px)"))
+  (str "translateY(" px
+       (if-not (string? px) "px")
+       ")"))
+
+(defn square [d]
+  {:width d
+   :height d})
 
 (defn scale [x]
   (str "scale(" x ")"))
@@ -51,3 +64,7 @@
               (some-> repeat name)
               (some-> direction name)]]
     (s/join " " (filter some? expr))))
+
+(defn animations [& animation-prms]
+  {:animation (s/join ", " (map animation animation-prms))})
+

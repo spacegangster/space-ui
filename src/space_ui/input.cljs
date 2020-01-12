@@ -10,14 +10,25 @@
   (into {} (map -data-attrs-mapper hmap)))
 
 
-(defn root [id {:keys [placeholder on-change on-intent on-key-down process-paste] :as opts}]
+(defn root
+  [id
+   {:keys
+    [^js/String placeholder
+     ^IMap intents
+     ^js/Function on-change
+     ^js/Function on-intent
+     ^js/Function on-key-down
+     ^js/Function process-paste]
+    :as opts}]
   (let [node          (r/atom nil)
         cur-val       (atom nil)
         get-cur-value #(some-> @node (.-value))
-        on-key-down   (cond
-                        on-intent   #(some-> % user-intents/key-down-evt->intent-evt on-intent)
-                        on-key-down on-key-down
-                        :else       identity)
+
+        on-key-down (cond
+                      intents (r/partial user-intents/handle-intent-with-intents-map intents)
+                      on-intent #(some-> % user-intents/key-down-evt->intent-evt on-intent)
+                      on-key-down on-key-down
+                      :else identity)
 
         on-key-up-internal
         (if on-change
@@ -61,6 +72,7 @@
               {:id           id-str
                :placeholder  placeholder
                :class        (if css-class (name css-class))
+               :tabIndex     1
                :defaultValue value
                :autoFocus    (:autofocus opts)
                :spellCheck   "false"

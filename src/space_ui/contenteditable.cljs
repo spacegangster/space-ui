@@ -14,13 +14,15 @@
 (defn contenteditable
   [id
    {:keys
-    [on-change
-     on-change-complete
-     on-blur
-     on-intent
-     on-key-down
+    [^js/Function on-change
+     ^js/Function on-change-complete
+     ^js/Function on-blur
+     ^js/Function on-intent
+     ^js/Function on-key-down
      text-mode?
-     process-paste] :as opts}]
+     ^IMap intents
+     ^js/Function process-paste]
+    :as opts}]
   (let [node (r/atom nil)
         state-value (atom nil)
 
@@ -32,6 +34,7 @@
               (.-innerHTML n))))
 
         on-key-down (cond
+                      intents (r/partial user-intents/handle-intent-with-intents-map intents)
                       on-intent #(some-> % user-intents/key-down-evt->intent-evt on-intent)
                       on-key-down on-key-down
                       :else identity)
@@ -41,8 +44,7 @@
           (fn [evt]
             (let [cur-val (get-cur-value)]
               (when (not= cur-val @state-value)
-                (on-change {:value  cur-val
-                            :target @node})))))
+                (on-change {:value  cur-val :target @node})))))
 
         on-blur-internal
         (fn [evt]
@@ -89,6 +91,7 @@
                  :dangerouslySetInnerHTML        {:__html value}
                  :placeholder                    placeholder,
                  :class                          (if css-class (name css-class))
+                 :tabIndex                       1
                  :autoFocus                      (:autofocus opts)
                  :content-editable               true
                  :data-text-mode                 text-mode?

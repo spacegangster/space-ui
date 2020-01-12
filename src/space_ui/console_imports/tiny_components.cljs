@@ -10,10 +10,10 @@
   [:i.icon {:key icon-name, :class (str "icon-" (name icon-name))}])
 
 (defn link-mailto [email]
-  [:a {:href (str "mailto:" email)} email])
+  [:a {:rel "noopener" :href (str "mailto:" email)} email])
 
 (defn link-outer [href title]
-  [:a {:target "_blank" :href href :title (str "Open " title " in a new tab")} title #_icon/external])
+  [:a {:rel "noopener" :target "_blank" :href href :title (str "Open " title " in a new tab")} title #_icon/external])
 
 (defn link-box [{:keys [main? luminous? active? svg? round? icon icon-alt on-click class href label attrs] :as params}]
   (let [css-class

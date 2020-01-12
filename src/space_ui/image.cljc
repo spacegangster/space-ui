@@ -4,7 +4,7 @@
 
 
 (defn image
-  [{:space-ui/keys [src css-class widths]
+  [{:space-ui/keys [alt src css-class widths]
     :or {widths [400 1200 1600 3000]}}]
   (let [path-components (s/split src #"\/")
         filename (last path-components)
@@ -14,6 +14,7 @@
     [:img
       {:class css-class
        :src    (str dirpath "/" "w" (first widths) "-" src)
+       :alt    alt
        :srcset (s/join "," src-set)
        :sizes  (s/join ","
                        ["(min-width: 300px) 400px"
