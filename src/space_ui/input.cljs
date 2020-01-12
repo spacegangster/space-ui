@@ -10,25 +10,53 @@
   (into {} (map -data-attrs-mapper hmap)))
 
 
+(def styles-src
+  (list
+    {:border         :none}
+    {:border-bottom  s/q-ui-border}
+    {:padding        "6px 0px"
+     :border-radius  :2px
+     :width          :100%
+     :letter-spacing :.09em
+     :outline        :none
+     :font-size      :inherit
+     :font-family    :inherit
+     :display        :inline-block}
+    ["&:empty"
+     {:min-width :220px}]
+    ["&:empty::before"
+     {:content "attr(placeholder)"}]))
+
+(def styles
+  [:.space-ui-input styles-src])
+
 (defn root
   [id
    {:keys
     [^js/String placeholder
      ^IMap intents
      ^js/Function on-change
+     ^js/Function parse-fn
+     ^js/Function on-change-complete ; todo
      ^js/Function on-intent
      ^js/Function on-key-down
      ^js/Function process-paste]
     :as opts}]
   (let [node          (r/atom nil)
         cur-val       (atom nil)
-        get-cur-value #(some-> @node (.-value))
+        parse-fn      (or parse-fn identity)
+        get-cur-value #(some-> @node (.-value) parse-fn)
 
         on-key-down (cond
                       intents (r/partial user-intents/handle-intent-with-intents-map intents)
                       on-intent #(some-> % user-intents/key-down-evt->intent-evt on-intent)
                       on-key-down on-key-down
                       :else identity)
+
+        on-blur-internal
+        (fn [evt]
+            (if on-change-complete
+              (on-change-complete {:value (get-cur-value)})))
 
         on-key-up-internal
         (if on-change

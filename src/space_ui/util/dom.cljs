@@ -1,4 +1,4 @@
-(ns crux-ui.views.commons.dom
+(ns space-ui.util.dom
   (:require [clojure.string :as s]
             [cljs.reader :as reader]
             [crux-ui.functions :as f]
