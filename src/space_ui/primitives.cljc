@@ -45,9 +45,6 @@
 (defn transforms [& exprs]
   {:transform (s/join " " exprs)})
 
-(defn animations [& expressions]
-  {:animation (s/join ", " expressions)})
-
 :animation/name
 :animation/duration
 :animation/easing

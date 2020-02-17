@@ -1,5 +1,6 @@
 (ns space-ui.input
   (:require [reagent.core :as r]
+            [space-ui.style.constants :as sc]
             [space-ui.ui-logic.user-intents :as user-intents]))
 
 
@@ -13,7 +14,7 @@
 (def styles-src
   (list
     {:border         :none}
-    {:border-bottom  s/q-ui-border}
+    {:border-bottom  "1px solid white"}
     {:padding        "6px 0px"
      :border-radius  :2px
      :width          :100%
