@@ -1,123 +1,194 @@
 (ns space-ui.style.constants
-  (:require [clojure.string :as s]))
+  (:require [space-ui.primitives :as prim]
+            [clojure.string :as str]))
 
 
 
 ;;;;; Colors
 
-(def color-text--placeholders "hsl(0, 0%, 40%)")
-(def color-lightable--filler  "hsla(0, 20%, 94%, .5)")
-(def color-lightable--base    "hsla(0, 20%, 94%, .7)")
-(def color-lightable--rank-2  "hsla(0, 37%, 94%, .81)")
-(def color-lightable--rank-1  "hsla(0, 40%, 94%, .9)")
-(def color-lightable--opaque    "hsl(0, 20%, 94%)")
+(def ^:const color-text--placeholders (prim/hsl  0,  0, 40))
+(def ^:const color-lightable--filler  (prim/hsla 0, 20, 94, 0.5))
+(def ^:const color-lightable--base    (prim/hsla 0, 20, 94, 0.7))
+(def ^:const color-lightable--rank-2  (prim/hsla 0, 37, 94, 0.81))
+(def ^:const color-lightable--rank-1  (prim/hsla 0, 40, 94, 0.9))
+(def ^:const color-lightable--opaque  (prim/hsl  0, 20, 94))
 
-(def color-focus--plane   "hsla(0, 40, 97, .8)")
-(def color-focus--plane2  "hsla(0, 50, 97, .99)")
+(def ^:const color-focus--plane   (prim/hsla 0, 40, 97, 0.8))
+(def ^:const color-focus--plane2  (prim/hsla 0, 50, 97, 0.99))
 
-(def color-text           "hsl(0, 0, 30)")
+(def ^:const color-text      (prim/hsl 0, 0, 30))
+(def ^:const color-text--shy (prim/hsl 0, 0, 50))
 
-(def color-icon--default "hsl(0, 0, 60)")
-(def color-icon--hovered "hsl(0, 0, 45)")
-(def color-icon--active  "hsl(0, 0, 30)")
+(def ^:const color-icon--default (prim/hsl 0, 0, 60))
+(def ^:const color-icon--hovered (prim/hsl 0, 0, 45))
+(def ^:const color-icon--active  (prim/hsl 0, 0, 30))
 
-(def color-control--default "hsla(0, 0%, 30%, .7)")
-(def color-control--textual-default "hsla(220, 20, 40, .8)")
-(def color-control--textual-hovered "hsla(220, 20, 40, 1)")
-(def color-control--hovered "hsla(210, 50, 50, .7)")
-(def color-control--active "hsla(210, 50, 50, 1)")
+(def ^:const color-control--default         (prim/hsla   0,  0, 30, 0.7))
+(def ^:const color-control--textual-default (prim/hsla 220, 20, 40, 0.8))
+(def ^:const color-control--textual-hovered (prim/hsla 220, 20, 40, 1))
+(def ^:const color-control--hovered         (prim/hsla 210, 50, 50, 0.7))
+(def ^:const color-control--active          (prim/hsla 210, 50, 50, 1))
 
 ; focus modes colors
-(def color-fm--clean-light-dimmer     "hsla(0, 0, 100, 1.0)")
-(def color-fm--clean-dark-dimmer      "hsla(0, 0,   0, 1.0)")
-(def color-fm--color-light-dimmer     "hsla(0, 0, 100, 0.1)")
-(def color-fm--color-dark-dimmer      "hsla(0, 0,   0, 0.3)")
-(def color-fm--glowing-letters-dimmer "hsla(0, 0,   0, 0.6)")
+(def ^:const color-fm--clean-light-dimmer     (prim/hsla 0, 0, 100, 1.0))
+(def ^:const color-fm--clean-dark-dimmer      (prim/hsla 0, 0,   0, 1.0))
+(def ^:const color-fm--color-light-dimmer     (prim/hsla 0, 0, 100, 0.1))
+(def ^:const color-fm--color-dark-dimmer      (prim/hsla 0, 0,   0, 0.3))
+(def ^:const color-fm--glowing-letters-dimmer (prim/hsla 0, 0,   0, 0.6))
 
-(def color-fm--clean-light-text     "hsl(0, 0, 40)")
-(def color-fm--clean-dark-text      "hsl(0, 0, 65)")
-(def color-fm--color-light-text     "hsl(0, 0, 25)")
-(def color-fm--color-dark-text      "hsl(0, 0, 90)")
-(def color-fm--glowing-letters-text "hsl(30, 20, 85)")
+(def ^:const color-fm--clean-light-text     (prim/hsl  0,  0, 40))
+(def ^:const color-fm--clean-dark-text      (prim/hsl  0,  0, 65))
+(def ^:const color-fm--color-light-text     (prim/hsl  0,  0, 25))
+(def ^:const color-fm--color-dark-text      (prim/hsl  0,  0, 90))
+(def ^:const color-fm--glowing-letters-text (prim/hsl 30, 20, 85))
 
 
-#_(def color-text          "hsl(220, 0, 60)")
-#_(def color-day           color-text)
-(def color-day--holiday  "hsl(20, 70, 60)")
+(def ^:const color-day--holiday  (prim/hsl 20, 70, 60))
 
-(def col-task-bg            "hsla(0,0,100, .8)")
-(def color-task-bg--focused "hsla(0,0,100, 1)")
-(def col-task-fg            "hsl(0,0,30)")
-(def col-task-bg--complete  "hsla(90,30,80, .5)")
-(def col-task-fg--complete  "hsl(0,0,50)")
+(def ^:const col-task-bg            (prim/hsla  0  0  98 0.97))
+(def ^:const color-task-bg--focused (prim/hsla  0  0 100 1))
+(def ^:const col-task-fg            (prim/hsl   0  0  30))
+(def ^:const col-task-bg--complete  (prim/hsla 90 30  80 0.5))
+(def ^:const col-task-fg--complete  (prim/hsl   0  0  50))
 
 
 
 ;;;;; dimensions
 
-(defn px [s]
-  (str s "px"))
+(defn px
+  ([s] (str s "px"))
+  ([s1 s2] (str s1 "px " s2 "px"))
+  ([s1 s2 s3] (str s1 "px " s2 "px " s3 "px"))
+  ([s1 s2 s3 s4] (str s1 "px " s2 "px " s3 "px " s4 "px"))
+  ([& step-values]
+   (str/join " " (map px step-values))))
 
 (defn perc [s]
   (str s "%"))
 
-(def dim-step 8) ; px
-(def dim-step-px (px dim-step)) ; px
+(def ^:const dim-step 8) ; px
+(def ^:const dim-step-px (px dim-step)) ; px
 
-(defn dim-step-x
-  ([] (dim-step-x 1))
+(defn d-step-x [r]
+  (* dim-step r))
+
+(defn d-step-x-px
+  ([] (d-step-x-px 1))
   ([r]
-   (px (* 8 r))))
+   (px (* dim-step r)))
+  ([r1 r2]
+   (str (px (* dim-step r1)) " "
+        (px (* dim-step r2))))
+  ([r1 r2 r3]
+   (str (px (* dim-step r1)) " "
+        (px (* dim-step r2)) " "
+        (px (* dim-step r3))))
+  ([r1 r2 r3 r4]
+   (str (px (* dim-step r1)) " "
+        (px (* dim-step r2)) " "
+        (px (* dim-step r3)) " "
+        (px (* dim-step r4))))
+  ([r1 r2 r3 r4 & step-values]
+   (str/join " " (cons (d-step-x-px r1 r2 r3 r4)
+                       (map d-step-x-px step-values)))))
+
+(def ^:const dim-grid-halfstep         (/ dim-step 2))
+(def ^:const dim-grid-halfstep-px      (px dim-grid-halfstep))
+(def ^:const dim-grid-header-height-px         (d-step-x-px 6))
+(def ^:const dim-grid-footer-height-px         (d-step-x-px 6))
+(def ^:const dim-grid-footer-height--mobile-px (d-step-x-px 7))
+
+(def ^:const dim-interpane-gap               (/ dim-step 2))
+(def ^:const dim-interpane-gap-px            (px dim-interpane-gap))
+(def ^:const dim-interitem-gap               (/ dim-interpane-gap 2))
+(def ^:const dim-interitem-gap-px            (px dim-interitem-gap))
+(def ^:const dim-item-side-pad               (d-step-x-px 2))
+(def ^:const dim-bottom-reading-space        "33vh")
+(def ^:const dim-root-pad--mobile-px         (px dim-grid-halfstep))
+(def ^:const dim-root-pad-bottom--mobile-px  (px dim-grid-halfstep))
+
+(def ^:const dim-fs-control--default "13.5px")
+(def ^:const dim-fs-content--focus-mode "18px")
+(def ^:const dim-fs-control--secondary "15px")
+
+(def ^:const dim-entry-side-pad (* dim-step 2))
+(def ^:const dim-entry-side-pad--mobile (* dim-step 1))
+(def ^:const dim-note-grid-upper-section "step * 3")
+(def ^:const dim-note-grid-lower-section "step * 5")
+(def ^:const dim-note-grid-left-section  "dim-entry-side-pad")
+(def ^:const dim-note-grid-right-section "dim-entry-side-pad")
+
+(def ^:const dim-spacing--outmost-pad "dim-grid-halfstep")
+
+(def ^:const dim-w-root__main-px (d-step-x-px 120))
+(def ^:const dim-w-root__main--slim-px (d-step-x-px 96))
+
+(def ^:const dim-w-central__branches "34%")
+(def ^:const dim-w-central__content "66%")
+
+(def ^:const dim-bp-laptop     "1400"  1400)
+(def ^:const dim-bp-laptop-px  "1400px" (px dim-bp-laptop))
+
+(def ^:const dim-bp-wide-screen     "1600"  1600)
+(def ^:const dim-bp-wide-screen-px  "1600px" (px dim-bp-wide-screen))
+
+(def ^:const dim-bp-slim    1100)
+(def ^:const dim-bp-slim-px
+  "for narrow desktop around 1100px
+   aspect ratio 12/10"
+  (px dim-bp-slim))
+(def ^:const dim-bp-slim-height-px
+  "for narrow desktop around 1100px
+   aspect ratio 12/10"
+  (px dim-bp-slim))
+
+(def ^:const dim-bp-mobile  768)
+(def ^:const dim-bp-mobile-px "768"  (px dim-bp-mobile))
+
+(def ^:const dim-bp-ipad-width--landscape "1024"  1024)
+(def ^:const dim-bp-ipad-width--landscape-px "1024px"  "1024px")
+(def ^:const dim-bp-ipad-height--landscape "768"  768)
+(def ^:const dim-bp-ipad-height--landscape-px "768px"  "768px")
+
+(def ^:const dim-bp-phones  500)
+(def ^:const dim-bp-phones-px "500"  (px dim-bp-phones))
 
 
-(def dim-grid-halfstep "step / 2")
-(def dim-grid-header-height "(dim-grid-step * 6)")
-(def dim-grid-footer-height "(dim-grid-step * 6)")
-(def dim-grid-footer-height--mobile "(dim-grid-step * 7)")
 
-(def dim-interpane-gap  "step / 2")
-(def dim-interitem-gap  "dim-interpane-gap / 2")
-(def dim-item-side-pad  "step * 2")
-(def dim-bottom-reading-space "33vh")
-(def dim-root-pad--mobile "dim-grid-halfstep")
-(def dim-root-pad-bottom--mobile "dim-grid-step * 0.5")
+(def ^:const mq-mobile-header-on
+  "media queries when mobile header should be on (mobile mode)"
+  [{:max-width dim-bp-slim-px}])
 
-(def dim-fs-control--default "13.5px")
-(def dim-fs-content--focus-mode "18px")
+(def ^:const mq-mobile-header-off
+  "media queries when mobile header should be on (mobile mode)"
+  [{:min-width dim-bp-slim-px}])
 
-(def dim-entry-side-pad "step * 2")
-(def dim-entry-side-pad--mobile "step * 1")
-(def dim-note-grid-upper-section "step * 3")
-(def dim-note-grid-lower-section "step * 5")
-(def dim-note-grid-left-section  "dim-entry-side-pad")
-(def dim-note-grid-right-section "dim-entry-side-pad")
 
-(def dim-spacing--outmost-pad "dim-grid-halfstep")
+(def ^:const mq-fullscreen-branches-on
+  "media queries when fullscreen branches should be on (mobile mode)"
+  [{:max-width dim-bp-mobile-px}])
 
-(def dim-w-root__main "dim-grid-step * 120")
-(def dim-w-root__main--slim "dim-grid-step * 96")
+(def ^:const mq-fullscreen-branches-off
+  "media queries when fullscreen branches should be off (desktop mode)"
+  [{:min-width (px (inc dim-bp-mobile))}])
 
-(def dim-w-central__branches "34%")
-(def dim-w-central__content "66%")
-
-(def dim-bp-laptop  "1400px")
-(def dim-bp-slim    "1100px")
-(def dim-bp-mobile  " 768px")
-(def dim-bp-phones  " 500px")
-
+(def ^:const mq-mobile-tabs-off
+  [{:min-width  (px (inc dim-bp-ipad-width--landscape))
+    :min-height (px (inc dim-bp-ipad-height--landscape))}])
 
 
 ;;;;; z indices
 
-(def z-root-pane--content "10")
-(def z-main-menu--hidden "0")
-(def z-main-menu--desktop "11")
-(def z-main-menu--open "20")
-(def z-mobile-menu-btn "22")
-(def z-layers-1 "50")
-(def z-layers-exit "51")
-(def z-root-status "52")
-(def z-central-header "1")
-(def z-central-tf-branches "30")
-(def z-central-tabs-burger "1")
-(def z-root-content--branches "z-main-menu--desktop + 1")
+(def ^:const z-root-pane--content    10)
+(def ^:const z-main-menu--hidden      0)
+(def ^:const z-main-menu--desktop    11)
+(def ^:const z-main-menu--open       20)
+(def ^:const z-mobile-menu-btn       22)
+(def ^:const z-layers-1              50)
+(def ^:const z-layers-exit           51)
+(def ^:const z-root-status           52)
+(def ^:const z-central-day-plan       2)
+(def ^:const z-central-tf-branches   30)
+(def ^:const z-central-header        31)
+(def ^:const z-central-tabs-burger    1)
+(def ^:const z-root-content--branches (inc z-main-menu--desktop))

@@ -46,6 +46,8 @@
               (when (not= cur-val @state-value)
                 (on-change {:value  cur-val :target @node})))))
 
+        on-input on-key-up-internal
+
         on-blur-internal
         (fn [evt]
           (if on-blur (on-blur evt))
@@ -98,6 +100,7 @@
                  :spellCheck                     "false"
                  :on-key-up                      on-key-up-internal
                  :on-paste                       on-paste-internal
+                 :on-input                       on-input
                  :on-key-down                    on-key-down
                  :on-focus                       on-focus
                  :on-blur                        on-blur-internal}

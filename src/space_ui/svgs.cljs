@@ -114,9 +114,16 @@
 
 (defn icon
   ([icon-name] (icon icon-name false))
-  ([icon-name {:keys [active? danger?] :as mods}]
-   [:div (vu/bem :svg-icon icon-name mods)
-    (get icons icon-name)]))
+  ([icon-name {:icon/keys [size colorscheme?]
+               :keys      [active? danger?] :as opts}]
+   (let [active? (or active? (:icon/active? opts))
+         danger? (or danger? (:icon/danger? opts))
+         css-class (str (if colorscheme? "g-colorscheme-control-icon ")
+                        (if active? "g-active ")
+                        (vu/bem-str :svg-icon icon-name opts))]
+     [:div {:style (if size {:width size :height size})
+            :class css-class}
+      (get icons icon-name)])))
 
 ;; todo better question sign for help
 ;; todo archive icon

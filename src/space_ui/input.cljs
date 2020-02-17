@@ -89,7 +89,8 @@
               (not= (get-cur-value) (:value next-props))))
 
        :reagent-render
-       (fn [id {:keys [data ; @param {map} with data attributes
+       (fn [id {input-name :name
+                :keys [data ; @param {map} with data attributes
                        on-blur on-focus
                        placeholder css-class value] :as opts}] ;; remember to repeat parameters
          (reset! cur-val value)
@@ -104,6 +105,7 @@
                :defaultValue value
                :autoFocus    (:autofocus opts)
                :spellCheck   "false"
+               :name         input-name
                :on-key-up    on-key-up-internal
                :on-paste     on-paste-internal
                :on-key-down  on-key-down
