@@ -1,4 +1,5 @@
-(ns space-ui.const.keycodes)
+(ns space-ui.const.keycodes
+  "A list of JS standard keycodes")
 
 (def kc->kw
   {3  ::break

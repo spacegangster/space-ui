@@ -65,3 +65,19 @@
 (defn animations [& animation-prms]
   {:animation (s/join ", " (map animation animation-prms))})
 
+
+(defn autoname [v]
+  (cond-> v (keyword? v) name))
+
+(defn poly-coord [[x y]]
+  (str (autoname x) " " (autoname y)))
+
+(defn polygon [& coords]
+  (str "polygon("
+       (clojure.string/join ", " (map poly-coord (partition 2 coords)))
+       ")"))
+
+(defn poly-clip [& points]
+  (let [poly (apply polygon points)]
+    {:clip-path poly
+     :-webkit-clip-path poly}))
