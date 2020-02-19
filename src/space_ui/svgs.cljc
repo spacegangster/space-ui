@@ -1,5 +1,5 @@
 (ns space-ui.svgs
-  (:require [app.views.util :as vu]))
+  (:require [space-ui.bem :as bem]))
 
 (def add
   [:svg {:unicode "&amp;#xe600;" :glyph-name "icon_12824" :viewBox "0 0 1000 1000" :xmlns "http://www.w3.org/2000/svg"}
@@ -120,7 +120,7 @@
          danger? (or danger? (:icon/danger? opts))
          css-class (str (if colorscheme? "g-colorscheme-control-icon ")
                         (if active? "g-active ")
-                        (vu/bem-str :svg-icon icon-name opts))]
+                        (bem/bem-str :svg-icon icon-name opts))]
      [:div {:style (if size {:width size :height size})
             :class css-class}
       (get icons icon-name)])))

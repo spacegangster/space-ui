@@ -1,6 +1,5 @@
 (ns space-ui.bem
-  (:require [clojure.string :as s])
-  (:import (clojure.lang IPersistentMap)))
+  (:require [clojure.string :as s]))
 
 
 ; bem
@@ -25,5 +24,5 @@
 (defn bem-str [css-class-name & modifiers]
   (bem-str-strict css-class-name modifiers))
 
-(defn ^IPersistentMap bem [css-class-name & modifiers]
+(defn bem [css-class-name & modifiers]
   {:class (bem-str-strict css-class-name modifiers)})
