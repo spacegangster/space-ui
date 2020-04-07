@@ -5,7 +5,7 @@
 
 ; ### Tissue compatibility analytics
 ; black background
-(def c-bg (hsl 33 43 8))
+(def c-bg (hsl 33 43 4))
 
 ; neutral tiles
 (def c-ind-inactive   (hsl  20 21 16)) ; inactive neutral
@@ -17,15 +17,16 @@
 (def c-ind-active    (hsl 179 36 68)) ; active part
 
 ; green fonts
-(def c-green-font-active (hsl 150 95 75)) ; active part
-(def c-green-font-active (hsl 150 89 78)) ; active part
+; (def c-green-font-active (hsl 150 95 75)) ; active part
+; (def c-green-font-active (hsl 150 89 78)) ; active part
 (def c-green-font-active (hsl 144 89 79)) ; active part
 
 ; errors
 (def c-ind-error-bg-active      (hsl 359, 88, 74)) ; active error
 (def c-ind-error-bg-semi-active (hsl 356, 59, 46)) ; semi active error
 (def c-ind-error-bg-inactive (hsl   4, 73, 22)) ; inactive error
-(def c-ind-desync            c-ind-inactive2) ; inactive error
+(def c-ind-desync-bg            c-ind-inactive2) ; inactive error
+(def c-ind-desync-fg            c-ind-error-bg-semi-active) ; inactive error
 (def c-ind-bg--main-cell (hsl 10 65 54))
 (def c-ind-fg--main-cell (hsl 10 65 8))
 

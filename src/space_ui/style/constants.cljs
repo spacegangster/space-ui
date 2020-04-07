@@ -9,6 +9,7 @@
 (def ^:const color-text--placeholders (prim/hsl  0,  0, 40))
 (def ^:const color-lightable--filler  (prim/hsla 0, 20, 94, 0.5))
 (def ^:const color-lightable--base    (prim/hsla 0, 20, 94, 0.7))
+(def ^:const color-root-menu          (prim/hsla 0, 20, 94, 0.93))
 (def ^:const color-lightable--rank-2  (prim/hsla 0, 37, 94, 0.81))
 (def ^:const color-lightable--rank-1  (prim/hsla 0, 40, 94, 0.9))
 (def ^:const color-lightable--opaque  (prim/hsl  0, 20, 94))
@@ -63,6 +64,9 @@
   ([& step-values]
    (str/join " " (map px step-values))))
 
+(defn autopx [v]
+  (cond-> v (number? v) (str "px")))
+
 (defn perc [s]
   (str s "%"))
 
@@ -92,6 +96,9 @@
    (str/join " " (cons (d-step-x-px r1 r2 r3 r4)
                        (map d-step-x-px step-values)))))
 
+(defn dims [& vals]
+  (str/join " " (mapv (comp autopx prim/autoname) vals)))
+
 (def ^:const dim-grid-halfstep         (/ dim-step 2))
 (def ^:const dim-grid-halfstep-px      (px dim-grid-halfstep))
 (def ^:const dim-grid-header-height-px         (d-step-x-px 6))
@@ -100,25 +107,26 @@
 
 (def ^:const dim-interpane-gap               (/ dim-step 2))
 (def ^:const dim-interpane-gap-px            (px dim-interpane-gap))
-(def ^:const dim-interitem-gap               (/ dim-interpane-gap 2))
-(def ^:const dim-interitem-gap-px            (px dim-interitem-gap))
+(def ^:const dim-interitem-gap-px            (px (/ dim-interpane-gap 2)))
 (def ^:const dim-item-side-pad               (d-step-x-px 2))
 (def ^:const dim-bottom-reading-space        "33vh")
-(def ^:const dim-root-pad--mobile-px         (px dim-grid-halfstep))
-(def ^:const dim-root-pad-bottom--mobile-px  (px dim-grid-halfstep))
+(def ^:const dim-root-pad--mobile-px         dim-grid-halfstep-px)
+(def ^:const dim-root-pad-bottom--mobile-px  dim-grid-halfstep-px)
 
-(def ^:const dim-fs-control--default "13.5px")
+(def ^:const dim-fs-control--default    "13.5px")
 (def ^:const dim-fs-content--focus-mode "18px")
-(def ^:const dim-fs-control--secondary "15px")
+(def ^:const dim-fs-control--secondary  "15px")
 
-(def ^:const dim-entry-side-pad (* dim-step 2))
-(def ^:const dim-entry-side-pad--mobile (* dim-step 1))
-(def ^:const dim-note-grid-upper-section "step * 3")
-(def ^:const dim-note-grid-lower-section "step * 5")
-(def ^:const dim-note-grid-left-section  "dim-entry-side-pad")
-(def ^:const dim-note-grid-right-section "dim-entry-side-pad")
+(def ^:const dim-entry-side-pad           (d-step-x 2))
+(def ^:const dim-entry-side-pad--mobile   (d-step-x 1))
+(def ^:const dim-entry-side-pad--mobile-px   (px dim-entry-side-pad--mobile))
+(def ^:const dim-note-grid-upper-section-px  (d-step-x-px 3))
+(def ^:const dim-note-grid-lower-section-px  (d-step-x-px 5))
+(def ^:const dim-note-grid-left-section-px   (px dim-entry-side-pad))
+(def ^:const dim-note-grid-right-section  dim-entry-side-pad)
+(def ^:const dim-note-grid-right-section-px  (px dim-note-grid-right-section))
 
-(def ^:const dim-spacing--outmost-pad "dim-grid-halfstep")
+(def ^:const dim-spacing--outmost-pad dim-grid-halfstep-px)
 
 (def ^:const dim-w-root__main-px (d-step-x-px 120))
 (def ^:const dim-w-root__main--slim-px (d-step-x-px 96))
@@ -137,12 +145,13 @@
   "for narrow desktop around 1100px
    aspect ratio 12/10"
   (px dim-bp-slim))
+
 (def ^:const dim-bp-slim-height-px
   "for narrow desktop around 1100px
    aspect ratio 12/10"
-  (px dim-bp-slim))
+  (px (* dim-bp-slim (/ 10 12))))
 
-(def ^:const dim-bp-mobile  768)
+(def ^:const dim-bp-mobile "768"  768)
 (def ^:const dim-bp-mobile-px "768"  (px dim-bp-mobile))
 
 (def ^:const dim-bp-ipad-width--landscape "1024"  1024)
@@ -164,6 +173,16 @@
   [{:min-width dim-bp-slim-px}])
 
 
+(def ^:const mq-small-laptops
+  "media queries for devices smaller than ipad (landscape mode)"
+  [{:max-width dim-bp-laptop-px
+    :min-width dim-bp-ipad-width--landscape-px
+    :min-aspect-ratio "12 / 10"}])
+
+(def ^:const mq-smaller-than-ipad
+  "media queries for devices smaller than ipad (landscape mode)"
+  [{:max-width dim-bp-ipad-width--landscape-px}])
+
 (def ^:const mq-fullscreen-branches-on
   "media queries when fullscreen branches should be on (mobile mode)"
   [{:max-width dim-bp-mobile-px}])
@@ -175,6 +194,12 @@
 (def ^:const mq-mobile-tabs-off
   [{:min-width  (px (inc dim-bp-ipad-width--landscape))
     :min-height (px (inc dim-bp-ipad-height--landscape))}])
+
+(def ^:const mq-proper-laptop+widescreen
+  [{:min-width dim-bp-wide-screen-px}
+   {:min-width        dim-bp-laptop-px
+    :min-aspect-ratio "14 / 10"}])
+
 
 
 ;;;;; z indices

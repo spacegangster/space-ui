@@ -1,5 +1,6 @@
 (ns space-ui.date-time
-  (:require [reagent.core :as r]
+  (:require [reagent.dom :as r]
+            [reagent.core :as rc]
             [goog.string :as gs]
             [commons.constants.keycodes :as kc]
             [space-ui.svgs :as svgs]
@@ -30,7 +31,7 @@
      on-intent
      on-key-down
      process-paste] :as opts}]
-  (let [node          (r/atom nil)
+  (let [node          (rc/atom nil)
         cur-val       (atom nil)
         get-cur-value
         (fn ^js/Date gcv []
@@ -66,7 +67,7 @@
                         cur-value)]
                   (on-change {:value  paste-processed
                               :target @node}))))))]
-    (r/create-class
+    (rc/create-class
       {:display-name "SpaceInputDateTime"
 
        :component-did-mount
@@ -106,8 +107,8 @@
 (defn datepicker
   [{eid :id :keys [due_date] :as task}
    {:keys [on-change] :as opts}]
-  (let [state (r/atom {::expanded? false
-                       ::input-id (str "task-" eid "-datetime")})
+  (let [state (rc/atom {::expanded? false
+                        ::input-id (str "task-" eid "-datetime")})
         collapse!      #(swap! state assoc ::expanded? false)
         toggle-expand! #(swap! state update ::expanded? not)]
     (fn []

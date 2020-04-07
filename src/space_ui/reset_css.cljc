@@ -18,14 +18,16 @@
   article, aside, canvas, details, embed,
   figure, figcaption, footer, header, hgroup,
   menu, nav, output, ruby, section, summary,
-  time, mark, audio, video {
+  time, mark, audio, video, button {
     margin: 0;
+    background: none;
     padding: 0;
     border: 0;
     font-size: 100%;
     box-sizing: border-box;
     font: inherit;
     vertical-align: baseline;
+    border-radius: 2px;
   }
   /* HTML5 display-role reset for older browsers */
   article, aside, details, figcaption, figure,

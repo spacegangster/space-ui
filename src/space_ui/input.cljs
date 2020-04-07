@@ -1,6 +1,6 @@
 (ns space-ui.input
-  (:require [reagent.core :as r]
-            [space-ui.style.constants :as sc]
+  (:require [reagent.core :as rc]
+            [reagent.dom :as r]
             [space-ui.ui-logic.user-intents :as user-intents]))
 
 
@@ -36,20 +36,20 @@
    {:keys
     [^js/String placeholder
      ^IMap intents
-     ^js/Function on-change
-     ^js/Function parse-fn
-     ^js/Function on-change-complete ; todo
-     ^js/Function on-intent
-     ^js/Function on-key-down
-     ^js/Function process-paste]
+     ^IFn on-change
+     ^IFn parse-fn
+     ^IFn on-change-complete ; todo
+     ^IFn on-intent
+     ^IFn on-key-down
+     ^IFn process-paste]
     :as opts}]
-  (let [node          (r/atom nil)
+  (let [node          (rc/atom nil)
         cur-val       (atom nil)
         parse-fn      (or parse-fn identity)
         get-cur-value #(some-> @node (.-value) parse-fn)
 
         on-key-down (cond
-                      intents (r/partial user-intents/handle-intent-with-intents-map intents)
+                      intents (rc/partial user-intents/handle-intent-with-intents-map intents)
                       on-intent #(some-> % user-intents/key-down-evt->intent-evt on-intent)
                       on-key-down on-key-down
                       :else identity)
@@ -77,7 +77,7 @@
                                         cur-html)]
                   (on-change {:value paste-processed
                               :target @node}))))))]
-    (r/create-class
+    (rc/create-class
       {:display-name "SpaceInput"
 
        :component-did-mount

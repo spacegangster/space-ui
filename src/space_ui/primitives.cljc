@@ -45,6 +45,9 @@
 (defn transforms [& exprs]
   {:transform (s/join " " exprs)})
 
+(defn autoname [v]
+  (cond-> v (keyword? v) name))
+
 :animation/name
 :animation/duration
 :animation/easing
@@ -52,22 +55,20 @@
 :animation/repeat
 :animation/direction
 
-(defn animation [{:animation/keys [duration easing delay repeat direction] :as opts}]
+(defn animation [{:animation/keys [duration easing delay repeat direction fill-mode] :as opts}]
   (let [name' (some-> (:animation/name opts) name)
         expr [name'
               (some-> duration (str "ms"))
-              (some-> easing name)
+              (some-> easing autoname)
               (some-> delay (str "ms"))
-              (some-> repeat name)
-              (some-> direction name)]]
+              (some-> repeat autoname)
+              (some-> direction autoname)
+              (some-> fill-mode autoname)]]
     (s/join " " (filter some? expr))))
 
 (defn animations [& animation-prms]
   {:animation (s/join ", " (map animation animation-prms))})
 
-
-(defn autoname [v]
-  (cond-> v (keyword? v) name))
 
 (defn poly-coord [[x y]]
   (str (autoname x) " " (autoname y)))
@@ -81,3 +82,21 @@
   (let [poly (apply polygon points)]
     {:clip-path poly
      :-webkit-clip-path poly}))
+
+(defn autopx [v]
+  (cond-> v (number? v) (str "px")))
+
+(defn grid-template [& args]
+  (let [[rows cols] ((juxt butlast last) args)
+        -row-fn (fn [[areas-str row-dim]]
+                  (str "'" areas-str "' " (autopx (autoname row-dim))))]
+    (str
+      (s/join "\n" (mapv -row-fn rows))
+      "\n/ "
+      (s/join " " (mapv (comp autoname autopx) cols)))))
+
+(assert (= "'a b c' 3px\n'a b c' 2px\n/ 3px 4px 4px"
+           (grid-template
+             ["a b c" :3px]
+             ["a b c" 2]
+             [:3px 4 4])))

@@ -1,5 +1,6 @@
 (ns space-ui.contenteditable
-  (:require [reagent.core :as r]
+  (:require [reagent.dom :as r]
+            [reagent.core :as rc]
             [space-ui.ui-logic.user-intents :as user-intents]))
 
 
@@ -14,16 +15,16 @@
 (defn contenteditable
   [id
    {:keys
-    [^js/Function on-change
-     ^js/Function on-change-complete
-     ^js/Function on-blur
-     ^js/Function on-intent
-     ^js/Function on-key-down
+    [^IFn on-change
+     ^IFn on-change-complete
+     ^IFn on-blur
+     ^IFn on-intent
+     ^IFn on-key-down
+     ^IFn process-paste
      text-mode?
-     ^IMap intents
-     ^js/Function process-paste]
+     ^IMap intents]
     :as opts}]
-  (let [node (r/atom nil)
+  (let [node (rc/atom nil)
         state-value (atom nil)
 
         get-cur-value
@@ -34,7 +35,7 @@
               (.-innerHTML n))))
 
         on-key-down (cond
-                      intents (r/partial user-intents/handle-intent-with-intents-map intents)
+                      intents (rc/partial user-intents/handle-intent-with-intents-map intents)
                       on-intent #(some-> % user-intents/key-down-evt->intent-evt on-intent)
                       on-key-down on-key-down
                       :else identity)
@@ -66,7 +67,7 @@
                                         cur-val)]
                   (on-change {:value  paste-processed
                               :target @node}))))))]
-    (r/create-class
+    (rc/create-class
       {:display-name "ContentEditable"
 
        :component-did-mount
