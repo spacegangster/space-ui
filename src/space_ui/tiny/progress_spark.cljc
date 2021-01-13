@@ -34,6 +34,7 @@
 (defn face [prog-perc]
   [:div.progress
    [:div.progress__track
-    {:style (str "width: " prog-perc "%")}
+    {:style #?(:cljs {:width (str prog-perc "%")}
+               :clj (str "width: " prog-perc "%"))}
     [:div.progress__head]]])
 

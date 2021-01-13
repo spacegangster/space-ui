@@ -1,12 +1,7 @@
 (ns space-ui.reset-css)
 
 (def reset
-  "
-  /* http://meyerweb.com/eric/tools/css/reset/
-     v2.0 | 20110126
-     License: none (public domain)
-  */
-  html, body, div, span, applet, object, iframe,
+  "html, body, div, span, applet, object, iframe,
   h1, h2, h3, h4, h5, h6, p, blockquote, pre,
   a, abbr, acronym, address, big, cite, code,
   del, dfn, em, img, ins, kbd, q, s, samp,
@@ -18,7 +13,7 @@
   article, aside, canvas, details, embed,
   figure, figcaption, footer, header, hgroup,
   menu, nav, output, ruby, section, summary,
-  time, mark, audio, video, button {
+  time, mark, audio, video, button, input {
     margin: 0;
     background: none;
     padding: 0;
@@ -29,10 +24,8 @@
     vertical-align: baseline;
     border-radius: 2px;
   }
-  /* HTML5 display-role reset for older browsers */
-  article, aside, details, figcaption, figure,
-  footer, header, hgroup, menu, nav, section {
-    display: block;
+  button {
+    letter-spacing: inherit;
   }
   body {
     line-height: 1;
@@ -51,5 +44,61 @@
   table {
     border-collapse: collapse;
     border-spacing: 0;
-    }
-  ")
+  }
+
+  a, input, label, button, ::placeholder {
+    border: none;
+    outline: none;
+    background: none;
+    color: inherit;
+    text-decoration: none;
+    font-size: inherit;
+    border-radius: 2px;
+    letter-spacing: inherit;
+  }
+
+  h1 {
+    font-size: 36px;
+    font-weight: 200;
+    line-height: 2;
+    letter-spacing: .09em;
+  }
+
+  h2 {
+    font-size: 30px;
+    font-weight: 200;
+    line-height: 2;
+    letter-spacing: .09em;
+  }
+
+  h3 {
+    font-size: 24px;
+    font-weight: 300;
+    line-height: 2;
+    letter-spacing: .09em;
+  }
+
+  h4 {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 2;
+    letter-spacing: .09em;
+  }
+
+  h5 {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 2;
+    letter-spacing: .09em;
+  }
+
+  h6 {
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 2;
+    letter-spacing: .09em;
+  }
+
+  body {
+    line-height: 1.5;
+  }")

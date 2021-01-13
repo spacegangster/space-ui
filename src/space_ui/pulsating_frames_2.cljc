@@ -76,12 +76,12 @@
                         :duration animation-time-ms
                         :delay (* unit-time i)
                         :direction :forwards
-                        :repeat :infinite}
+                        :iteration-count :infinite}
             #:animation{:name :top
                         :duration animation-time-ms
                         :delay (* unit-time i)
                         :direction :forwards
-                        :repeat :infinite})])
+                        :iteration-count :infinite})])
 
        [:.p-osc
         {:width :100%

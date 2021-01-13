@@ -22,6 +22,9 @@
        "T" (gs/padNumber (.getHours d) 2)
        ":" (gs/padNumber (.getMinutes d) 2)))
 
+(defn dispatch-on-keycode [dispatch-map]
+  (rc/partial dom/dispatch-on-keycode dispatch-map))
+
 (defn datetime-input
   [id
    {:keys
@@ -43,7 +46,7 @@
                 @cur-val))))
 
         on-key-down
-        (dom/dispatch-on-keycode {::kc/enter #(some-> @node (.blur))})
+        (dispatch-on-keycode {::kc/enter #(some-> @node (.blur))})
 
         on-blur-internal
         (if-not on-change

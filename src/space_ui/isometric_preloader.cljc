@@ -120,7 +120,7 @@
                  :animation/duration 150
                  :animation/delay (* 60 i)
                  :animation/easing :ease-in-out
-                 :animation/repeat :infinite
+                 :animation/iteration-count :infinite
                  :animation/direction :alternate}))])]]]])])
 
 

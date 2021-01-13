@@ -1,32 +1,19 @@
 (ns space-ui.util.dom
   (:require [clojure.string :as s]
-            [cljs.reader :as reader]
-            [crux-ui.functions :as f]
-            [reagent.core :as r]
-            [crux-ui.views.commons.keycodes :as kc]))
+            [cljs.reader :as reader]))
 
 (def window js/window)
 (def doc js/document)
 (def day-millis (* 86400 1000))
 (def str->id js/parseInt)
 
-(defn- gid [id] (.getElementById js/document id))
+(defn- gid [id]
+  (.getElementById js/document id))
 
 (defn get-body-width []
   (.-width (.getBoundingClientRect (.-body js/document))))
 
 (def jsget goog.object/getValueByKeys)
-
-(defn evt->keycode-kw [react-evt]
-  (kc/kc->kw (^js .-keyCode react-evt)))
-
-(defn- -dispatch-on-keycode [dipatch-map evt]
-  (when-let [f (get dipatch-map (evt->keycode-kw evt))]
-    (^js .preventDefault evt)
-    (f evt)))
-
-(defn dispatch-on-keycode [dispatch-map]
-  (r/partial -dispatch-on-keycode dispatch-map))
 
 (defn get-elem-pos [elem]
   (let [rect (.getBoundingClientRect elem)]
@@ -54,19 +41,6 @@
 (defn get-viewport-height []
   js/window.innerHeight)
 
-(defn get-scroll-root-height []
-  (let [cal-elem (gid "cal")]
-    (or 10000
-        (some-> js/document.documentElement (jsget "dataset" "height") js/parseInt)
-        (elem-height cal-elem))))
-
-(defn calc-scroll-top-for-vertical-center []
-  (/ (- (get-scroll-root-height) js/window.innerHeight) 2))
-
-(defn re-center-vertically! []
-  (println "re-center-vertically")
-  (scroll-to! (+ 0 (calc-scroll-top-for-vertical-center))))
-
 (defn calc-evt-path-js [evt]
   (or (.-path evt)
       (and (.-composedPath evt)
@@ -79,12 +53,6 @@
   (let [path (-> evt (jsget "nativeEvent") calc-evt-path-js js->clj)]
     (some #(has-class? % class-name) path)))
 
-
-(defn get-container-dimensions []
-  {:body-width         (get-body-width)
-   :container-height   js/window.innerHeight
-   :container-width    js/window.innerWidth
-   :scroll-cont-height (get-scroll-root-height)})
 
 (defn get-element-by-id [id]
   (js/document.getElementById id))
@@ -188,9 +156,3 @@
       (read-keyword-or-nil str)
       str)))
 ;(autoparse "aaa:2323")
-
-(defn dataset->clj [dom-ds]
-  (f/map-values autoparse (dataset->clj-raw dom-ds)))
-
-(defn event->target-data [evt]
-  (dataset->clj (.. evt -currentTarget -dataset)))

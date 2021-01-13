@@ -44,14 +44,25 @@
 (def ^:const color-fm--glowing-letters-text (prim/hsl 30, 20, 85))
 
 
-(def ^:const color-day--holiday  (prim/hsl 20, 70, 60))
+(def ^:const col-task-bg              (prim/hsla  0  0  98 0.97))
+(def ^:const col-task-bg--time-label  (prim/hsla  0  0  98 0.40))
+(def ^:const col-task-bg--on-pane     (prim/hsla 90 30  80 0.5))
+(def ^:const color-task-bg--focused   (prim/hsla  0  0 100 1))
+(def ^:const col-task-fg              (prim/hsl   0  0  30))
+(def ^:const col-task-bg--complete    (prim/hsla 90 30  80 0.5))
+(def ^:const col-task-fg--complete    (prim/hsl   0  0  50))
 
-(def ^:const col-task-bg            (prim/hsla  0  0  98 0.97))
-(def ^:const color-task-bg--focused (prim/hsla  0  0 100 1))
-(def ^:const col-task-fg            (prim/hsl   0  0  30))
-(def ^:const col-task-bg--complete  (prim/hsla 90 30  80 0.5))
-(def ^:const col-task-fg--complete  (prim/hsl   0  0  50))
+; (def ff-logo "-apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif")
+(def ff-logo "-apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif")
+(def ff-logo--mac "-apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif")
 
+(def ff-main
+  (str "-apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', "
+       "Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif"))
+(def ff-email ; used in mail-service
+  (str "-apple-system, 'Segoe UI', 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif"))
+(def ff-main--mac
+  (str "-apple-system, 'Helvetica Neue', Helvetica, sans-serif"))
 
 
 ;;;;; dimensions
@@ -61,8 +72,8 @@
   ([s1 s2] (str s1 "px " s2 "px"))
   ([s1 s2 s3] (str s1 "px " s2 "px " s3 "px"))
   ([s1 s2 s3 s4] (str s1 "px " s2 "px " s3 "px " s4 "px"))
-  ([& step-values]
-   (str/join " " (map px step-values))))
+  ([s1 s2 s3 s4 & step-values]
+   (str/join " " (map px (into [s1 s2 s3 s4] step-values)))))
 
 (defn autopx [v]
   (cond-> v (number? v) (str "px")))
@@ -114,11 +125,14 @@
 (def ^:const dim-root-pad-bottom--mobile-px  dim-grid-halfstep-px)
 
 (def ^:const dim-fs-control--default    "13.5px")
+(def ^:const dim-fs-control--larger     "16px")
+(def ^:const dim-fs-content "16px")
 (def ^:const dim-fs-content--focus-mode "18px")
 (def ^:const dim-fs-control--secondary  "15px")
+(def ^:const dim-fs-hint  "14px")
 
-(def ^:const dim-entry-side-pad           (d-step-x 2))
-(def ^:const dim-entry-side-pad--mobile   (d-step-x 1))
+(def ^:const dim-entry-side-pad          "step x 2"  (d-step-x 2))
+(def ^:const dim-entry-side-pad--mobile "step"   (d-step-x 1))
 (def ^:const dim-entry-side-pad--mobile-px   (px dim-entry-side-pad--mobile))
 (def ^:const dim-note-grid-upper-section-px  (d-step-x-px 3))
 (def ^:const dim-note-grid-lower-section-px  (d-step-x-px 5))
@@ -181,7 +195,27 @@
 
 (def ^:const mq-smaller-than-ipad
   "media queries for devices smaller than ipad (landscape mode)"
-  [{:max-width dim-bp-ipad-width--landscape-px}])
+  [{:max-width (px (dec dim-bp-ipad-width--landscape))}])
+
+(def ^:const mq-smaller-than-ipad--portrait
+  "media queries for devices smaller than ipad (landscape mode)"
+  [{:max-width (px (dec dim-bp-mobile))}])
+
+(def ^:const mq-phone-and-smaller
+  "media queries for phones and smaller devices (max-width < 500)"
+  [{:max-width dim-bp-phones-px}])
+
+(def ^:const mq-narrow-portrait
+  {:max-aspect-ratio "6/10"})
+
+(def ^:const mq-larger-than-ipad
+  "media queries for devices larger than ipad (landscape mode)"
+  [{:min-width dim-bp-ipad-width--landscape-px}])
+
+(def ^:const mq-larger-than-ipad--diag
+  "media queries for devices smaller than ipad (landscape mode)"
+  [{:min-width dim-bp-ipad-width--landscape-px
+    :min-height dim-bp-ipad-height--landscape-px}])
 
 (def ^:const mq-fullscreen-branches-on
   "media queries when fullscreen branches should be on (mobile mode)"
@@ -191,9 +225,18 @@
   "media queries when fullscreen branches should be off (desktop mode)"
   [{:min-width (px (inc dim-bp-mobile))}])
 
+
 (def ^:const mq-mobile-tabs-off
-  [{:min-width  (px (inc dim-bp-ipad-width--landscape))
-    :min-height (px (inc dim-bp-ipad-height--landscape))}])
+  "media queries when mobile tabs should be off, and side menu used"
+  [{:min-width  (px dim-bp-ipad-width--landscape)}])
+; :min-height (px (inc dim-bp-ipad-height--landscape))
+
+(def ^:const mq-mobile-tabs-on
+  [{:max-width  (px (dec dim-bp-ipad-width--landscape))}
+   #_{:min-width  (px dim-bp-ipad-width--landscape)
+      :max-aspect-ratio "11/10"}])
+
+
 
 (def ^:const mq-proper-laptop+widescreen
   [{:min-width dim-bp-wide-screen-px}
@@ -213,7 +256,12 @@
 (def ^:const z-layers-exit           51)
 (def ^:const z-root-status           52)
 (def ^:const z-central-day-plan       2)
+(def ^:const z-central-entities       1)
 (def ^:const z-central-tf-branches   30)
 (def ^:const z-central-header        31)
-(def ^:const z-central-tabs-burger    1)
+(def ^:const z-central-tabs          31)
+(def ^:const z-central-tabs-burger   35)
+(def ^:const z-central-tabs-mob-menu 33)
+(def ^:const z-task-focused          33)
+(def ^:const z-tf-scale              32)
 (def ^:const z-root-content--branches (inc z-main-menu--desktop))

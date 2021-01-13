@@ -44,7 +44,7 @@
            #:animation{:name :perspective
                        :duration 1800
                        :direction :alternate
-                       :repeat :infinite
+                       :iteration-count :infinite
                        :easing :ease-in-out})}])]))
 
 (defn frame [i]

@@ -18,10 +18,11 @@
     [^IFn on-change
      ^IFn on-change-complete
      ^IFn on-blur
+     ^IFn on-did-mount
      ^IFn on-intent
      ^IFn on-key-down
      ^IFn process-paste
-     text-mode?
+     ^boolean text-mode?
      ^IMap intents]
     :as opts}]
   (let [node (rc/atom nil)
@@ -72,7 +73,10 @@
 
        :component-did-mount
          (fn [this]
-           (reset! node (r/dom-node this)))
+           (let [dn (r/dom-node this)]
+             (if on-did-mount
+               (on-did-mount dn))
+             (reset! node dn)))
 
        :should-component-update
          (fn [this cur-argv [f id next-props :as next-argv]]
@@ -107,4 +111,4 @@
                  :on-blur                        on-blur-internal}
                 data-attrs (merge data-attrs))]))})))
 
-
+(def face contenteditable)

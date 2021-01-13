@@ -1,53 +1,24 @@
 (ns space-ui.style.mixins
+  "Mixins api thing. Combines other mixins namespaces"
   (:require [clojure.string :as s]
             ["tinycolor2" :as tc]
             [space-ui.primitives :as sp]
             [space-ui.style.constants :as c]
             [garden.core :as garden]
+            [space-ui.style.main-mixins :as mm]
+            [space-ui.style.mixins-persistence-indication--glow :as mix.status--glow]
             [space-ui.style.constants :as sc]
             [space-ui.primitives :as prim]))
 
-(def display-centerflex
-  {:display :flex
-   :align-items :center})
-
-(defn grid--flow-row [gap]
-  {:display           :inline-grid
-   :align-items       :center
-   :grid-column-gap   gap
-   :grid-auto-columns :auto
-   :grid-auto-flow    :column})
-
-(def display-flex-stretch
-  {:display :flex
-   :align-items :stretch})
-
-(def pane-frame
-  {:border-radius :2px})
-
-(defn important [& strings]
-  (str (s/join " " strings) " !important"))
-
-(defn animation-bsb-pulse [keyframes-name]
-  (let [kfn  (str "bsb-pulse-" keyframes-name)]
-    {:animation (str "1s ease-in-out " kfn " infinite")
-     :animation-fill-mode :forwards}))
-
-(defn animation-bsb-pulse-one [keyframes-name]
-  (let [kfn  (str "bsb-pulse-" keyframes-name)]
-    {:animation (str "1s ease-in-out " kfn " 1")
-     :animation-fill-mode :forwards}))
-
-(defn animation-bs-pulse [keyframes-name]
-  (let [kfn  (str "bs-pulse-" keyframes-name)]
-    {:animation (str "1s ease-in-out " kfn " infinite")
-     :animation-fill-mode :forwards}))
-
-(defn animation-bs-pulse-one [keyframes-name]
-  (let [kfn  (str "bs-pulse-" keyframes-name)]
-    {:animation (str "1s ease-in-out " kfn " 1")
-     :animation-fill-mode :forwards}))
-
+(def display-centerflex mm/display-centerflex)
+(def grid--flow-row mm/grid--flow-row)
+(def display-flex-stretch mm/display-flex-stretch)
+(def pane-frame mm/pane-frame)
+(def important mm/important)
+(def animation-glow-pulse--bottom mm/animation-pulse)
+(def animation-glow-pulse--bottom--one mm/animation-pulse--one-fill)
+(def animation-glow-pulse mm/animation-pulse)
+(def animation-glow-pulse--one mm/animation-pulse--one-fill)
 
 (def control--hoverable
   (list
@@ -65,13 +36,27 @@
        :stroke sc/color-control--active
        :fill   sc/color-control--active}]))
 
-(def control--hoverable--half-faded
+(def control--hoverable--fade-020
   (list
-    {:cursor :pointer
+    {:cursor     :pointer
      :transition "color .1s ease-in-out"
-     :opacity 0.4}
+     :opacity    0.2}
     [:&:hover
      {:opacity 1}]))
+
+(def control--hoverable--fade-040
+  (list
+    {:cursor     :pointer
+     :transition "color .1s ease-in-out"
+     :opacity    0.4}
+    [:&:hover
+     {:opacity 1}]))
+
+(def hint
+  {:font-size sc/dim-fs-hint
+   :font-weight 400
+   :line-height 1.2
+   :opacity 0.3})
 
 (defn fullscreen [& [dim-space]]
   (let [dim-space (or dim-space "0px")]
@@ -116,13 +101,15 @@
     text-radiance--on]])
 
 
-(defn size
-  ([w]
-   {:width w
-    :height w})
-  ([w h]
-   {:width w
-    :height h}))
+(def ^{:doc ""} size #'mm/size)
+
+;(alter-meta! #'size assoc :doc "ee")
+;(meta #'size)
+#_(let [m (meta #'mm/size)]
+    (def ^{:doc (:doc m)
+           :arglists (:arglists m)}
+      size #'mm/size))
+
 
 (def grid-area--all
   {:grid-area "1 / 1 / last-line / end"})
@@ -132,23 +119,13 @@
    [:&.g-focus
     {:background color-bg-focused}]))
 
-(defn persistence-indicated--focus [sel]
-  (list
-    [(str sel "--valid")
-     (animation-bsb-pulse-one "valid")]
-    [(str sel "--in-progress")
-     (animation-bsb-pulse "processing")]
-    [(str sel "--error")
-     (animation-bsb-pulse-one "error")]))
+
+(def persistence-indicated--focus
+  mix.status--glow/focus-mode)
 
 (def persistence-indicated
-  (list
-    [:&--valid
-     (animation-bs-pulse-one "valid")]
-    [:&--in-progress
-     (animation-bs-pulse "processing")]
-    [:&--error
-     (animation-bs-pulse-one "error")]))
+  mix.status--glow/box)
+
 
 (def icon--danger
   (let [col (sp/hsl 0 80 50)]
@@ -171,6 +148,7 @@
      {:height :100%}]))
 
 (def pane
+  "plain list mixin"
   (list
     (merge
       pane-frame
@@ -198,37 +176,82 @@
          :color           sc/color-text--placeholders}]
     (into (list own-rules) pane)))
 
+(def filler--transparent
+  (let [own-rules
+        {:height          "calc(50vh - 112px)"
+         :display         :flex
+         :align-items     :center
+         :line-height     :1.6
+         :justify-content :center
+         :background      :none
+         :padding         (str "0 " sc/dim-item-side-pad)
+         :color           sc/color-text--placeholders}]
+    (into (list own-rules) pane)))
+
 (def nav-item
   (into (list {:cursor :pointer}) pane))
 
-(defn glowing-link [base-class base-text-color]
-  (let [tc-inst      (tc base-text-color)
+
+(defn glowing-link
+  [{:as opts
+    :comp/keys
+    [base-class
+     color-base
+     props
+     base-alpha--glow
+     hover-state?
+     important?]
+    :or {base-alpha--glow 0.44}}]
+  (let [tc-inst      (tc color-base)
         sel-base     (str "." base-class)
-        color-reg    (.toHslString tc-inst)
-        color-hover  (.toHslString (.lighten tc-inst 10))
-        color-active (.toHslString (.lighten tc-inst 20))]
+        props-n      (count props)
+        ;
+        reg-alpha    (or base-alpha--glow 0.44)
+        hover-parent-alpha    (* 1.2 base-alpha--glow)
+        hover-alpha    (* 1.5 base-alpha--glow)
+        ;
+        color-reg    (-> tc-inst ^js .clone (^js .setAlpha reg-alpha) ^js .toHslString)
+        color-reg--opacit    (-> tc-inst ^js .clone (^js .setAlpha 0) ^js .toHslString)
+        color-hover--by-parent  (-> tc-inst ^js .clone (^js .lighten 10) (^js .setAlpha hover-parent-alpha) ^js .toHslString)
+        color-hover  (-> tc-inst ^js .clone (^js .lighten 10) (^js .setAlpha hover-alpha) ^js .toHslString)
+        color-active (-> tc-inst ^js .clone (^js .lighten 20) (^js .setAlpha 1) ^js .toHslString)]
     (list
       [sel-base
        (str sel-base ":visited")
        {:cursor     :pointer
         :background :none
-        :stroke     color-reg
-        :fill       color-reg
-        :color      color-reg}]
-      [(str sel-base ":hover")
-       {:color     color-hover
-        :fill      color-hover
-        :stroke    color-hover}]
+        :text-shadow (str "0 0 0px " color-reg--opacit)
+        :transition "all .2s ease-in-out"
+        :will-change "color stroke fill text-shadow"}
+       (zipmap props (repeat props-n (str color-reg (if important? " !important"))))]
+
+
+      (if hover-state?
+        [(str ".g-hover > " sel-base)
+         (str ".g-hover > * > " sel-base)
+         (zipmap props (repeat props-n color-hover))])
+
+      (if hover-state?
+        [(str sel-base ":hover")
+         (zipmap props (repeat props-n color-hover))])
+
       [(str sel-base "--active")
        (str sel-base "--active:visited")
        (str sel-base ".g-active")
-       {:color       color-active
-        :stroke      color-active
-        :fill        color-active
-        :text-shadow (str "0 0 1px " color-active)}])))
+       (zipmap props (repeat props-n color-active))
+       {:text-shadow (str "0 0 1px " color-active)}])))
 
-(defn dark-link [base-class base-text-color]
-  (let [tc-inst      (tc base-text-color)
+
+
+(defn dark-link
+  [{:comp/keys
+    [base-class
+     color-base
+     hover-state?
+     props
+     important?]}]
+  (let [tc-inst      (tc color-base)
+        props-n      (count props)
         sel-base     (str "." base-class)
         color-reg    (.toHslString tc-inst)
         color-hover  (.toHslString (.darken tc-inst 10))
@@ -237,30 +260,33 @@
       [sel-base
        (str sel-base ":visited")
        {:cursor     :pointer
-        :background :none
-        :stroke     color-reg
-        :fill       color-reg
-        :color      color-reg}]
-      [(str sel-base ":hover")
-       {:stroke color-reg
-        :fill   color-reg
-        :color  color-hover}]
+        :background :none}
+       (zipmap props (repeat props-n color-reg))]
+
+      (if hover-state?
+        [(str sel-base ":hover")
+         (zipmap props (repeat props-n color-hover))])
       [(str sel-base "--active")
        (str sel-base "--active:visited")
        (str sel-base ".g-active")
-       {:color color-active
-        :stroke color-active
-        :fill color-active
-        :box-shadow :none
+       (zipmap props (repeat props-n color-active))
+       {:box-shadow :none
         :font-weight 600}])))
 
-(defn calc-link-css [base-class base-text-color]
-  (let [tc-inst  (tc base-text-color)
+
+(defn calc-link-rules
+  [{:comp/keys
+    [base-class
+     color-base
+     base-alpha--glow
+     hover-state?
+     important?]
+    :as opts}]
+  (let [tc-inst  (tc color-base)
         text-lum (.getLuminance tc-inst)]
-    (garden/css
-      (if (> text-lum 0.5)
-        (glowing-link base-class base-text-color)
-        (dark-link base-class base-text-color)))))
+    (if (> text-lum 0.5)
+      (glowing-link opts)
+      (dark-link opts))))
 
 (def pane--opaque
   (merge pane-frame
