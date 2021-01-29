@@ -64,7 +64,10 @@
 
      (gs/at-media {:max-width "429px"}
        [:.glitch-logo
-        {:font-size "4rem"}]))])
+        {:font-size "4rem"}])
+     (gs/at-media {:max-width :350px}
+       [:.glitch-logo
+        {:font-size "3.5rem"}]))])
 
 
 (defn logo-glitched [& words]

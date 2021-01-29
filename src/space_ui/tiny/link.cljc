@@ -6,6 +6,10 @@
             [garden.stylesheet :as gs]
             [clojure.string :as str]))
 
+:link/title :link/on-click :link/class :link/href :link/label :link/attrs :link/goal-id
+:link/blank? :link/target-blank? :link/outer? :link/colorscheme? :link/underline?
+:link/main? :link/luminous? :link/active?
+
 (def color-text--off (prim/hsl 0 0 93))
 (def color-text--stage-1 (prim/hsl 0 0 99))
 (def color-text--stage-2 (prim/hsl 0 0 95))
@@ -70,16 +74,17 @@
 
 
 (defn calc-reach-goal [goal-id]
-  (let [goal-id-for-ym (-> (str goal-id) (str/replace #"^:" "") (str/replace #"/" "."))]
-    #?(:clj (str "reach_goal('" goal-id-for-ym "', event)")
-       :cljs nil)))
+  (when goal-id
+    (let [goal-id-for-ym (-> (str goal-id) (str/replace #"^:" "") (str/replace #"/" "."))]
+      #?(:clj  (str "reach_goal('" goal-id-for-ym "', event)")
+         :cljs nil))))
 
 (def on-click-prop #?(:cljs :on-click :clj :onclick))
 
 (comment
   "reach_goal('w.goals.landing/try-demo--deep')"
+  (calc-reach-goal nil)
   (calc-reach-goal :w.goals.landing/try-demo--deep))
-
 
 (defn inline
   "Plain link"
@@ -95,10 +100,11 @@
                  (if class (str " " (name class)))))
         on-click (or on-click (calc-reach-goal goal-id))]
     [:a.g-nolink
-     (cond-> {:href href :title title
-              :data-goal-id goal-id
-              on-click-prop on-click
-              :class css-class}
+     (cond-> {:href href
+              :title            title
+              :data-goal-id     goal-id
+              on-click-prop     on-click
+              :class            css-class}
              attrs (->> (merge attrs))
              outer? (assoc :rel "noopener")
              (or outer? target-blank? blank?) (assoc :target "_blank"))
@@ -192,42 +198,3 @@
        [:div.link__icon.link__icon--after
         [svgs/icon icon {:active? active?}]])]))
 
-
-(defn link--box
-  "Box-like link"
-  [{:keys [icon icon-alt icon-size icon-after
-           title on-click class href label attrs
-           blank? target-blank? outer? colorscheme? underline?
-           main? luminous? active? round? bordered?] :as params}]
-  (let [css-class
-        (-> :link
-            (bem/bem-str {:box true
-                          :main main? :round round? :active active?
-                          :luminous luminous? :bordered bordered?})
-            (str (if active? " g-active")
-                 (if underline? " g-underline")
-                 (if colorscheme? " g-colorscheme-control-text")
-                 (if class (str " " (name class)))))]
-    [:a.g-nolink
-     (cond-> {:href href :title (or title icon-alt)
-              on-click-prop on-click
-              :class css-class}
-             attrs (->> (merge attrs))
-             outer? (assoc :rel "noopener")
-             (or outer? target-blank? blank?) (assoc :target "_blank"))
-     (if icon
-       [:div.link__icon
-        {:class (if colorscheme? :g-colorscheme-control-icon)
-         :title icon-alt}
-        [svgs/icon icon #:icon{:size icon-size :active? active? :colorscheme? colorscheme?}]])
-     (if label
-       [:div.link__label {:class (if icon "link__label--ml")} label])
-     (if icon-after
-       [:div.link__icon.link__icon--after
-        [svgs/icon icon {:active? active?}]])]))
-
-
-(defn link--btn ; todo delete from client? [no usage from website]
-  "Button-like link"
-  [prms]
-  (link--box (merge {:bordered? true} prms)))

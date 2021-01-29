@@ -56,6 +56,12 @@
 (def ff-logo "-apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif")
 (def ff-logo--mac "-apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif")
 
+(def ff-stack-serif
+  "'Apple Garamond', 'Baskerville', 'Times New Roman', 'Droid Serif', 'Times', 'Source Serif Pro', serif")
+(def ff-stack-mono
+  "'SF Mono', 'Monaco', 'Inconsolata', 'Fira Mono', 'Droid Sans Mono', 'Source Code Pro', monospace")
+
+
 (def ff-main
   (str "-apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', "
        "Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif"))
