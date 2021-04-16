@@ -11,25 +11,40 @@
 (defn render-data-attrs [hmap]
   (into {} (map -data-attrs-mapper hmap)))
 
+(defn autofill-fix-text
+  "Fixes autofill text"
+  [attrs]
+  ; autofill background color can be set with &:-webkit-autofill {box-shadow inset}
+  [".space-ui-input:-webkit-autofill::first-line"
+   attrs])
+
+(defn fix-placeholder [attrs]
+  [".space-ui-input::placeholder"
+   attrs])
+
+
 (def style-rules
-  [:.space-ui-input
-   {:width          :100%
-    :outline        :none
-    :font-size      :1em
-    :font-weight    :inherit
-    :letter-spacing :inherit
-    :background     :none
-    :border         :none
-    :min-height     :1em
-    :color          :inherit}
-   ["&[type=text]:empty"
-    "&[type=password]:empty"
-    "&[type=email]:empty"
-    {:min-width :220px}
-    ["&::before"
-     {:content "attr(placeholder)"}]]
-   ["&::placeholder"
-    {:color "hsl(0, 0%, 65%)"}]])
+  (list
+    [:.space-ui-input
+     {:width          :100%
+      :outline        :none
+      :font-size      :1em
+      :font-weight    :inherit
+      :letter-spacing :inherit
+      :background     :none
+      :border         :none
+      :min-height     :1em
+      :color          :inherit}
+     ["&[type=text]:empty"
+      "&[type=password]:empty"
+      "&[type=email]:empty"
+      {:min-width :220px}
+      ["&::before"
+       {:content "attr(placeholder)"}]]
+     ["&::placeholder"
+      {:color "hsl(0, 0%, 65%)"}]]
+    (autofill-fix-text
+      {:font-size :1em})))
 
 
 (defn root2

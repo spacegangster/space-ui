@@ -34,9 +34,9 @@
    {:class (str "status-led--" (name line-status))
     :title title}])
 
-(defn face--fixed
+(defn face--static
   "Green/yellow/red  led indicator.
-   This handle is.
+   This face doesn't grow or shrink.
 
    line-status – keyword or string ending "
   [line-status title]

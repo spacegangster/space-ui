@@ -133,7 +133,13 @@
 
 
 (defn grid-template
-  "Produces grid-template string"
+  "Produces grid-template string
+   ex:
+   (grid-template
+     [\"a b c\" :3px]
+     [2 3 :4px])
+   \"'a b c' 3px
+     16px 24px 4px\""
   [& args]
   (let [[rows cols] ((juxt butlast last) args)
         -row-fn (fn [[areas-str row-dim]]

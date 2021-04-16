@@ -116,11 +116,14 @@
 (defn dims [& vals]
   (str/join " " (mapv (comp autopx prim/autoname) vals)))
 
+(defn min-max [min max]
+  (str "minmax(" (prim/autoname min) ", " (prim/autoname max) ")"))
+
 (def ^:const dim-grid-halfstep         (/ dim-step 2))
 (def ^:const dim-grid-halfstep-px      (px dim-grid-halfstep))
 (def ^:const dim-grid-header-height-px         (d-step-x-px 6))
 (def ^:const dim-grid-footer-height-px         (d-step-x-px 6))
-(def ^:const dim-grid-footer-height--mobile-px (d-step-x-px 7))
+(def ^:const dim-grid-footer-height--mobile-px (d-step-x-px 8))
 
 (def ^:const dim-interpane-gap               (/ dim-step 2))
 (def ^:const dim-interpane-gap-px            (px dim-interpane-gap))
@@ -133,6 +136,7 @@
 (def ^:const dim-fs-control--default    "13.5px")
 (def ^:const dim-fs-control--larger     "16px")
 (def ^:const dim-fs-content "16px")
+(def ^:const dim-fs-btn--reg "14px")
 (def ^:const dim-fs-content--focus-mode "18px")
 (def ^:const dim-fs-control--secondary  "15px")
 (def ^:const dim-fs-hint  "14px")
@@ -199,6 +203,14 @@
     :min-width dim-bp-ipad-width--landscape-px
     :min-aspect-ratio "12 / 10"}])
 
+(def ^:const mq:theme-light
+  "media query for the light theme"
+  {:prefers-color-scheme :color-schemes/light})
+
+(def ^:const mq:theme-dark
+  "media query for the dark theme"
+  {:prefers-color-scheme :color-schemes/dark})
+
 (def ^:const mq-smaller-than-ipad
   "media queries for devices smaller than ipad (landscape mode)"
   [{:max-width (px (dec dim-bp-ipad-width--landscape))}])
@@ -210,6 +222,10 @@
 (def ^:const mq-phone-and-smaller
   "media queries for phones and smaller devices (max-width < 500)"
   [{:max-width dim-bp-phones-px}])
+
+(def ^:const mq:smaller-than-iphone-x
+  "media queries for phones and smaller devices (max-width < 500)"
+  [{:max-width :374px}])
 
 (def ^:const mq-narrow-portrait
   {:max-aspect-ratio "6/10"})
@@ -253,21 +269,26 @@
 
 ;;;;; z indices
 
-(def ^:const z-root-pane--content    10)
-(def ^:const z-main-menu--hidden      0)
-(def ^:const z-main-menu--desktop    11)
-(def ^:const z-main-menu--open       20)
-(def ^:const z-mobile-menu-btn       22)
-(def ^:const z-layers-1              50)
-(def ^:const z-layers-exit           51)
-(def ^:const z-root-status           52)
-(def ^:const z-central-day-plan       2)
-(def ^:const z-central-entities       1)
-(def ^:const z-central-tf-branches   30)
-(def ^:const z-central-header        31)
-(def ^:const z-central-tabs          31)
-(def ^:const z-central-tabs-burger   35)
-(def ^:const z-central-tabs-mob-menu 33)
-(def ^:const z-task-focused          33)
-(def ^:const z-tf-scale              32)
+(def ^:const z-root-pane--content     10)
+(def ^:const z-main-menu--hidden       0)
+(def ^:const z-main-menu--desktop     11)
+(def ^:const z-main-menu--open        20)
+(def ^:const z-mobile-menu-btn        22)
+(def ^:const z-layers-1               50)
+(def ^:const z-layers-exit            51)
+(def ^:const z-root-status            52)
+
+(def ^:const z-central-entities        1)
+(def ^:const z-central-tf-branches    30)
+(def ^:const z-central-header         31)
+(def ^:const z-central-tf-tabs        31)
+(def ^:const z-central-tabs-mob-menu  33)
+(def ^:const z-central-tabs-burger--open    (inc z-central-tabs-mob-menu))
+(def ^:const z-central-day-plan        2)
+(def ^:const z-central-day-plan--active (inc z-central-tf-tabs))
+
+(def ^:const z-slide                  (inc z-central-tf-tabs))
+(def ^:const z-task-focused           33)
+(def ^:const z-task-time-input-active 34)
+(def ^:const z-tf-scale               32)
 (def ^:const z-root-content--branches (inc z-main-menu--desktop))

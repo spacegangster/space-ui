@@ -18,12 +18,12 @@
             :data-goal-id goal-id
             :tabindex     tabindex
             :type         type}
-           attrs (merge attrs)
-    (if icon
-      [:div.btn__icon
-       [svgs/icon icon]])
-    (if (seq label)
-      [:div.btn__label label]))])
+           attrs (merge attrs))
+   (if icon
+     [:div.btn__icon
+      [svgs/icon icon]])
+   (if (string? label)
+     [:div.btn__label label])])
 
 (defn cta
   [{:btn/keys

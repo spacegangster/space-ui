@@ -7,10 +7,6 @@
 
 (def style-rules
   (list
-    [:.section__media>.media>video
-     {:border-radius :5px
-      :box-shadow "0 0 2px white"}]
-
     [:picture
      {:line-height 0}]
 
@@ -21,6 +17,7 @@
     [:.media
      {:display :grid
       :align-items :start}]
+
 
     [:.media-gallery
      (prim/grid
@@ -33,15 +30,16 @@
      [:&__main
       {:display :grid
        :place-items :center}]
+
      [:&__previews
-      {:display :grid
-       :grid-gap :8px
-       :grid-auto-flow :column
-       :place-self "stretch center"
-       :max-height :100px
-       :overflow :hidden
+      {:display           :grid
+       :grid-gap          :8px
+       :grid-auto-flow    :column
+       :place-self        "stretch"
+       :max-height        :100px
+       :overflow          :hidden
        :grid-auto-columns "minmax(80px, 140px)"
-       :place-items "stretch center"}
+       :place-items       "stretch center"}
       [:&>.media
        {:cursor :pointer}]
       (gs/at-media sc/mq-phone-and-smaller

@@ -7,20 +7,20 @@
   (let [loading (cond lazy? "lazy"  eager? "eager"  :else "auto")]
     (cond
       src
-      [:video {:title title :class css-class
-               :loop loop?
+      [:video {:title       title :class css-class
+               :loop        loop?
                :playsinline true
-               :autoplay true
-               :src src
-               :loading loading}]
+               :autoplay    true
+               :src         src
+               :loading     loading}]
 
       sources
-      [:video {:title title :class css-class
-               :loop loop?
+      [:video {:title       title :class css-class
+               :loop        loop?
                :playsinline true
-               :autoplay true
-               :muted true
-               :loading loading}
+               :autoplay    true
+               :muted       true
+               :loading     loading}
               ;:controls true}
         (for [{:media/keys [src src-type media] :as source} sources]
           [:source {:type src-type :src src :media media}])])))
