@@ -1,9 +1,11 @@
 (ns space-ui.util.dom
   (:require [clojure.string :as s]
-            [cljs.reader :as reader]))
+            [cljs.reader :as reader]
+            ["./set-caret-position" :refer [setCaretPosition]]))
 
 (def window js/window)
 (def doc js/document)
+(def doc-el js/document.documentElement)
 (def day-millis (* 86400 1000))
 (def str->id js/parseInt)
 
@@ -38,6 +40,16 @@
 (defn scroll-by! [scroll]
   (.scrollBy window 0 scroll))
 
+(defn set-style! [^js/Element elem, style-map]
+  (let [style-obj (^js .-style elem)
+        set-style-attr! (fn [style-obj k v]
+                          (aset style-obj k v)
+                          style-obj)]
+    (reduce-kv set-style-attr! style-obj style-map)))
+(comment
+  (set-style! js/window.temp2 {"height" 0, "overflow" "hidden"}))
+
+
 (defn get-viewport-height []
   js/window.innerHeight)
 
@@ -60,11 +72,21 @@
 (defn parse-elem-eid [elem]
   (some-> elem (jsget "dataset" "entityId") str->id))
 
-(defn evt->entity-id [evt]
-  (some-> evt (jsget "currentTarget" "dataset" "entityId") str->id))
+(defn evt->data-prop [^js react-evt prop]
+  (some-> react-evt (jsget "currentTarget" "dataset" prop)))
 
-(defn evt->data-idx [evt]
-  (some-> evt (jsget "currentTarget" "dataset" "idx") js/parseInt))
+(defn evt->entity-id [^js react-evt]
+  (some-> (evt->data-prop react-evt "entityId") str->id))
+
+(defn evt->data-idx [^js react-evt]
+  (evt->data-prop react-evt "idx"))
+
+
+(defn ^js/Element get-first-by-classname
+  ([^js/String classname]
+   (aget (js/document.getElementsByClassName classname) 0))
+  ([^js/String classname, ^js/Element element]
+   (aget (.getElementsByClassName element classname) 0)))
 
 
 (defn select-one [sel & [ctx]]
@@ -91,6 +113,9 @@
 
 (defn- camel-dash-replace [match]
   (str "-" (.toLowerCase (first match))))
+
+(defn is-element? [x]
+  (instance? js/HTMLElement x))
 
 (defn closest-parent [elem css-class]
   (if-not elem
@@ -156,3 +181,40 @@
       (read-keyword-or-nil str)
       str)))
 ;(autoparse "aaa:2323")
+
+
+
+(defn set-caret-to-start! [el]
+  (setCaretPosition el 0))
+
+(defn set-caret-to-end! [el]
+  (let [content (.-textContent el)
+        cl (.-length content)]
+    (setCaretPosition el cl)))
+
+
+(defn focus-element [el & [^keyword caret-pos]]
+  (when el
+    (try
+      (.click el)
+      (catch js/Error e nil))
+    (.focus el)
+    (case caret-pos
+      :caret/first (set-caret-to-start! el)
+      :caret/last (set-caret-to-end! el)
+      nil)))
+
+(defn focus-selector [sel & [^keyword caret-pos]]
+  (when-let [el (select-one sel)]
+    (focus-element el caret-pos)))
+
+(defn focus-id [id & [^keyword caret-pos]]
+  (when-let [el (gid id)]
+    (focus-element el caret-pos)))
+
+
+(defn focus-selector--delayed
+  ([sel]
+   (focus-selector--delayed sel 50))
+  ([sel timeout]
+   (js/setTimeout #(focus-selector sel) timeout)))
