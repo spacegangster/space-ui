@@ -8,9 +8,10 @@
             [garden.stylesheet :as gs]
             [space-ui.style.mixins :as mixins]
             [space-ui.style.constants :as sc]
-            [space-ui.input :as input]
             [space-ui.bem :as vu]
-            [space-ui.primitives :as prim]))
+            [space-ui.primitives :as prim]
+            [space-ui.inputs.text :as input]
+            [space-ui.inputs.checkbox-boolean :as checkbox]))
 
 
 (def style-rules
@@ -63,7 +64,6 @@
          ["hint" :auto]
          [:auto])}])
 
-
    [:&__label
     {:grid-area      :label
      :letter-spacing :0.03em
@@ -76,24 +76,6 @@
     {:min-width :10px}
     ["> .contenteditable"
      mixins/placeholded]
-
-    ["> input"
-     ["&[type=color]"
-      {:height        :28px
-       :width         :48px
-       :cursor        :pointer
-       :border-radius :2px
-       :border        0
-       :padding       (sc/px 2)}]
-
-     ["&[type=text]"
-      "&[type=email]"
-      "&[type=password]"
-      {:height        :100%
-       :border-radius "2px 2px 0 0"
-       :padding       "4px"
-       :border-bottom "1px solid #aaa"
-       :background    sc/color-lightable--base}]]
 
     [:&--checkbox
      {:height     :18px
@@ -121,12 +103,13 @@
     [:&--right
      {:text-align :right}]]])
 
+
 (def controls
-  {:input.type/text     input/root2
-   :input.type/email    input/root2
-   :input.type/checkbox input/root2
-   :input.type/password input/root2
-   :input.type/color    input/root2})
+  {:input.type/text     input/face
+   :input.type/email    input/face
+   :input.type/checkbox checkbox/face
+   :input.type/password input/face
+   :input.type/color    input/face})
 
 
 (def wide-input?
