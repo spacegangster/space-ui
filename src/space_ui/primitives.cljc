@@ -63,6 +63,16 @@
 (assert (= "3px" (autoname :3px)))
 
 
+(def direction-kw->str
+  {:gradient/to-bottom "to bottom"
+   :gradient/to-top "to top"})
+
+(defn linear-gradient [direction & color-stops]
+  (let [direction (get direction-kw->str direction (name direction))
+        color-stops (map auto-hsl color-stops)]
+    (str "linear-gradient(" (str/join ", " (cons direction color-stops)) ")")))
+
+
 :animation/name
 :animation/duration
 :animation/easing

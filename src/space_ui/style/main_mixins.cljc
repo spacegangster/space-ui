@@ -2,6 +2,7 @@
   (:require [clojure.string :as str]
             [space-ui.primitives :as sp]
             [space-ui.style.constants :as sc]
+            [common.functions :as f]
             [space-ui.primitives :as prim]))
 
 
@@ -32,8 +33,28 @@
 (def pane-frame
   {:border-radius :2px})
 
+(def pane-frame--larger
+  {:border-radius :4px})
+
 (defn important [& strings]
   (str (str/join " " strings) " !important"))
+
+
+(def form-title--thin
+  {:letter-spacing :0.01em
+   :word-spacing   :0.07em
+   :width          :100%
+   :position       :relative})
+
+(def form-title--bold
+  {:letter-spacing "0.0em"
+   :word-spacing   "0.05em"
+   :font-weight    "500"
+   :font-family    "system-ui"
+   :color          "hsl(0deg 0% 44%)"
+   :width          "100%"
+   :position       "relative"
+   :font-size      "26px"})
 
 
 (defn animation-pulse
@@ -61,7 +82,6 @@
  (list
   {:background   grad
    :color        :white}
-  #_{:border-color "hsl(0, 0%, 70%)"}
   [:&:active
    {:background grad
     :color      :white
@@ -107,13 +127,17 @@
      :left      dim-space
      :right     dim-space}))
 
+
+(def border-default
+  {:border (str "1px solid " sc/color:border:control-on-pane)})
+
 (def button--round
   [:&
    {:height        :25px
     :width         :25px
-    :border-radius :50%
-    :border        (str "1px solid " sc/color-control--textual-default)
-    :padding        0}
+    :border-radius :50%}
+   {:padding        0}
+   border-default
    [:&:hover
     {:border-color sc/color-control--textual-hovered}]])
 
@@ -163,21 +187,41 @@
     [:&--scroll-gemini
      {:height :100%}]))
 
+
 (def pane
+  "mixin defining pane borders and background.
+  Also supports hover and focus modifiers
+  plain list mixin"
   (list
-    (merge
+    (f/assign
       pane-frame
-      {:background  sc/color-lightable--base
-       :transition  "background .1s ease-in-out"
+      {:background sc/color-lightable--base
+       :transition "background .1s ease-in-out"
        :will-change :background})
+
+    ; rank1 is the most intense one
     [:&.g-hover--rank-1
      {:background (important sc/color-lightable--rank-1)}]
     [:&.g-hover--rank-2
      {:background (important sc/color-lightable--rank-2)}]
+
+    ; rank1 is the most intense one
     [:&.g-focus--rank-1
      {:background sc/color-lightable--rank-1}]
     [:&.g-focus--rank-2
      {:background sc/color-lightable--rank-2}]))
+
+(def pane--on-light
+  "mixin defining pane borders and background.
+  Also supports hover and focus modifiers
+  plain list mixin"
+  (list
+    (f/assign
+      pane-frame
+      {:background    sc/color:bg:pane-on-light
+       :box-shadow    "0 0 4px 0px hsl(211deg 35% 86%)"
+       :transition    "background .1s ease-in-out"})))
+
 
 (def filler
   (let [own-rules
@@ -191,8 +235,24 @@
          :color           sc/color-text--placeholders}]
     (into (list own-rules) pane)))
 
+
+(def label--secondary
+  "e.g. for task field labels"
+  {:font-size :13px
+   :color     "hsl(0, 0%, 60%)"})
+
+(def label--secondary-pad-b
+  "e.g. for task field labels"
+  {:display        :block
+   :padding-bottom :4px})
+
+
 (def nav-item
-  (into (list {:cursor :pointer}) pane))
+  (cons
+    {:height sc/dim:grid:nav-item-height-px
+     :cursor :pointer}
+    pane))
+
 
 (def pane--opaque
   (merge pane-frame

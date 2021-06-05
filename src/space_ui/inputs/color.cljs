@@ -3,7 +3,8 @@
             [commons.logging :as log]
             [space-ui.tiny.btn :as btn]
             [garden.core :as garden]
-            [space-ui.style.mixins :as mixins]))
+            [space-ui.style.mixins :as mixins]
+            [space-ui.style.constants :as sc]))
 
 
 
@@ -17,7 +18,12 @@
     :grid-gap :8px
     :grid-template-columns "auto auto"}
    [:&__input
-    {}]
+    {:height        :28px
+     :width         :48px
+     :cursor        :pointer
+     :border-radius :2px
+     :border        0
+     :padding       (sc/px 2)}]
    [:&__reset>.button
     (mixins/size :10px :14px)
     {:stroke-width :30px}]])

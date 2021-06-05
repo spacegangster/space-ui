@@ -1,14 +1,14 @@
 (ns space-ui.style.mixins
   "Mixins api thing. Combines other mixins namespaces"
-  (:require [clojure.string :as s]
-            ["tinycolor2" :as tc]
+  (:require ["tinycolor2" :as tc]
+            [garden.core :as garden]
             [space-ui.primitives :as sp]
             [space-ui.style.constants :as c]
-            [garden.core :as garden]
             [space-ui.style.main-mixins :as mm]
             [space-ui.style.mixins-persistence-indication--glow :as mix.status--glow]
             [space-ui.style.constants :as sc]
-            [space-ui.primitives :as prim]))
+            [space-ui.primitives :as prim]
+            [common.functions :as f]))
 
 (def display-centerflex mm/display-centerflex)
 (def grid--flow-row mm/grid--flow-row)
@@ -126,16 +126,7 @@
 (def persistence-indicated
   mix.status--glow/box)
 
-
-(def icon--danger
-  (let [col (sp/hsl 0 80 50)]
-    [:&
-     {:transition "all .3s ease-in-out"}
-     [:&:hover
-      {:text-shadow  "0 0 4px red"
-       :color        col
-       :stroke       col
-       :fill         col}]]))
+(def icon--danger mm/icon--danger)
 
 
 (def dual-scroll
@@ -147,22 +138,6 @@
     [:&--scroll-gemini
      {:height :100%}]))
 
-(def pane
-  "plain list mixin"
-  (list
-    (merge
-      pane-frame
-      {:background c/color-lightable--base
-       :transition "background .1s ease-in-out"
-       :will-change :background})
-    [:&.g-hover--rank-1
-     {:background (important c/color-lightable--rank-1)}]
-    [:&.g-hover--rank-2
-     {:background (important c/color-lightable--rank-2)}]
-    [:&.g-focus--rank-1
-     {:background c/color-lightable--rank-1}]
-    [:&.g-focus--rank-2
-     {:background c/color-lightable--rank-2}]))
 
 (def filler
   (let [own-rules
@@ -174,7 +149,7 @@
          :background      sc/color-lightable--filler
          :padding         (str "0 " sc/dim-item-side-pad)
          :color           sc/color-text--placeholders}]
-    (into (list own-rules) pane)))
+    (into (list own-rules) mm/pane)))
 
 (def filler--transparent
   (let [own-rules
@@ -186,10 +161,9 @@
          :background      :none
          :padding         (str "0 " sc/dim-item-side-pad)
          :color           sc/color-text--placeholders}]
-    (into (list own-rules) pane)))
+    (into (list own-rules) mm/pane)))
 
-(def nav-item
-  (into (list {:cursor :pointer}) pane))
+(def nav-item mm/nav-item)
 
 
 (defn glowing-link

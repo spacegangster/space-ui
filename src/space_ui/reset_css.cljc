@@ -61,42 +61,36 @@
     font-size: 36px;
     font-weight: 200;
     line-height: 2;
-    letter-spacing: .09em;
   }
 
   h2 {
     font-size: 30px;
     font-weight: 200;
     line-height: 2;
-    letter-spacing: .09em;
   }
 
   h3 {
     font-size: 24px;
     font-weight: 300;
     line-height: 2;
-    letter-spacing: .09em;
   }
 
   h4 {
     font-size: 20px;
     font-weight: 400;
     line-height: 2;
-    letter-spacing: .09em;
   }
 
   h5 {
     font-size: 16px;
     font-weight: 600;
     line-height: 2;
-    letter-spacing: .09em;
   }
 
   h6 {
     font-size: 14px;
     font-weight: 800;
     line-height: 2;
-    letter-spacing: .09em;
   }
 
   body {

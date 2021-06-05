@@ -86,6 +86,8 @@
   (calc-reach-goal nil)
   (calc-reach-goal :w.goals.landing/try-demo--deep))
 
+(def top-right-arrow "⇗")
+
 (defn inline
   "Plain link"
   [{:link/keys [title on-click class href label attrs goal-id

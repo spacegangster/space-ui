@@ -1,5 +1,6 @@
 (ns space-ui.inputs.radio1
-  (:require [garden.core :as garden])
+  (:require [garden.core :as garden]
+            [space-ui.util.functions :as ui.f])
   #?(:cljs
      (:require [commons.logging :as log]
                [reagent.core :as rc]
@@ -20,8 +21,8 @@
      [:&__label]]
 
     [".radio-item__input:checked + .radio-item__label"
-     {:color       :blue
-      :font-weight :bold}]
+     {:color       :blue}]
+      ;:font-weight :bold}]
 
     [:.button]))
 
@@ -30,43 +31,66 @@
    (garden/css style-rules-buttons)])
 
 
-#?(:cljs
-   (defn on-change--kw [atom react-evt]
-     (let [t (.-target react-evt)
-           v-raw (.-value t)
-           v-parsed (f/keyword<-string v-raw)]
-       ;(.persist react-evt)
-       (reset! atom v-parsed)
-       (log/info ::change #_react-evt v-parsed))))
+(defn on-change-internal
+  [value-parse on-change on-change--value atom react-evt]
+  #?(:cljs
+     (let [target (^js .-target react-evt)
+           val-raw (not-empty (^js .-value target))
+           val-parsed (value-parse val-raw)
+           e #:evt{:type   :event-types/change
+                   :value  val-parsed
+                   :target target}]
+       (reset! atom val-parsed)
+       (when on-change
+         (on-change e))
+       (when on-change--value
+         (on-change--value val-parsed)))))
 
 
 (defn face-simple
   [{input-name :comp/name
-    :comp/keys [keyword-mode? options value]
+    :comp/keys
+    [on-change on-change--value
+     val-parse val-format
+     css-class
+     options value]
     :as opts}
    atom:val]
-  [:div.radio
-   (for [item options]
-     (let [val-str (str (:option/value item))]
-       ^{:key val-str}
-       [:div.radio-item
-        [:input.radio-item__input
-         {:type      "radio"
-          :id        val-str
-          :name      input-name
-          :on-change #?(:cljs (if keyword-mode?
-                                (rc/partial on-change--kw atom:val))
-                        :clj  nil)
-          :checked   (= (:option/value item) @atom:val)
-          :value     val-str}]
-        [:label.radio-item__label.button
-         {:for val-str}
-         (:option/label item)]]))])
+  (let [val-selected @atom:val
+        on-change* #?(:cljs (rc/partial on-change-internal val-parse on-change on-change--value atom:val)
+                      :clj nil)]
+
+    [:div.radio
+     {:class css-class}
+
+     (for [item options]
+       (let [val-str (val-format (:option/value item))]
+         ^{:key val-str}
+         [:div.radio-item
+          [:input.radio-item__input
+           (cond->
+             {:type      "radio"
+              :id        val-str
+              :name      input-name
+              :checked   (= (:option/value item) val-selected)
+              :value     val-str}
+             on-change* (assoc :on-change on-change*))]
+          [:label.radio-item__label.button
+           {:for val-str}
+           (:option/label item)]]))]))
+
 
 (defn face
   [{input-name :comp/name
-    :comp/keys [keyword-mode? options value] :as opts}]
-  (let [atom:val #?(:cljs (rc/atom value) :clj (atom value))]
+    :comp/keys
+    [on-change on-change--value
+     options value] :as opts}]
+  (let [atom:val #?(:cljs (rc/atom value) :clj (atom value))
+        val-format (ui.f/options->format options)
+        val-parse (ui.f/options->transform options)
+        opts (assoc opts :comp/val-parse val-parse
+                         :comp/val-format val-format)]
+
     (fn []
       ^{:key (str @atom:val)}
       [face-simple opts atom:val])))

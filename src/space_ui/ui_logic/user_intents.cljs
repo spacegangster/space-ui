@@ -124,8 +124,8 @@
        :evt/data      (some-> dataset dom/dataset->clj-raw)})))
 
 
-(defn handle-intent-with-intents-map [intents e]
-  (let [evt (some-> e key-down-evt->intent-evt)]
-    (when-let [intent-handler (get intents (:intent evt))]
-      (.preventDefault e)
+(defn handle-intent-with-intents-map [intents react-key-evt]
+  (let [evt (some-> react-key-evt key-down-evt->intent-evt-2)]
+    (when-let [intent-handler (get intents (:evt/intent evt))]
+      (.preventDefault react-key-evt)
       (intent-handler evt))))

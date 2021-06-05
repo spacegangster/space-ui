@@ -1,9 +1,21 @@
 (ns space-ui.input
+  "Deprecated. Use space-ui.inputs.text instead.
+
+  Text input supporting various :type attr values
+  Can also be a checkbox, but please don't use it
+
+  On change emits value evt
+  {:value v, :target t}"
   (:require [reagent.core :as rc]
             [reagent.dom :as r]
             [space-ui.ui-logic.user-intents :as user-intents]
-            [commons.logging :as log]))
+            [commons.logging :as log]
+            [commons.functions :as u]))
 
+:input.type/email
+:input.type/password
+:input.type/text
+:input.type/number
 
 (defn- -data-attrs-mapper [[k v]]
   (vector (str "data-" (name k)) v))
@@ -34,6 +46,7 @@
       :background     :none
       :border         :none
       :min-height     :1em
+      :min-width      :1.5rem
       :color          :inherit}
      ["&[type=text]:empty"
       "&[type=password]:empty"
@@ -47,10 +60,15 @@
       {:font-size :1em})))
 
 
-(defn root2
+
+(defn
+  ^{:deprecated true}
+  face
+  "Use space-ui.inputs.text instead"
   [{:comp/keys
     [^string placeholder
      value
+     value-type
      id
      css-class
      ^boolean disabled?
@@ -60,27 +78,34 @@
      ^keyword input-type
      ^IMap intents
      ^IFn on-change
+     ^IFn on-change--value
      ^IFn parse-fn
      ^IFn on-change-complete
      ^IFn on-intent
      ^IFn on-key-down
      ^IFn process-paste]
     :as opts}]
-  (let [node (rc/atom nil)
+  (let [atom:node (rc/atom nil)
         atom:val (rc/atom value)
-        parse-fn (or parse-fn identity)
+
         switchable-type? (= :input.type/checkbox input-type)
+        parse-fn (cond
+                   parse-fn parse-fn
+                   (= :value-type/int value-type) u/parse-int-or-nil
+                   (= :value-type/float value-type) js/parseFloat
+                   (= :input.type/number input-type) u/parse-int-or-nil
+                   :else identity)
 
         get-cur-value
         (case input-type
           :input.type/checkbox
-          #(some-> @node .-checked)
-          #(some-> @node .-value parse-fn))
+          #(some-> @atom:node .-checked)
+          #(some-> @atom:node .-value parse-fn))
 
-        get-value-evt (fn [] {:value (get-cur-value) :target @node})
+        get-value-evt (fn [] {:value (get-cur-value) :target @atom:node})
 
         on-key-down (cond
-                      intents  (rc/partial user-intents/handle-intent-with-intents-map intents)
+                      intents (rc/partial user-intents/handle-intent-with-intents-map intents)
                       on-intent #(some-> % user-intents/key-down-evt->intent-evt on-intent)
                       on-key-down on-key-down
                       :else identity)
@@ -96,8 +121,11 @@
                 (reset! atom:val v)
                 (if on-change-complete
                   (on-change-complete e)
-                  (if on-change
-                    (on-change e))))))
+                  (do
+                    (if on-change--value
+                      (on-change--value v))
+                    (if on-change
+                      (on-change e)))))))
           identity)
 
         on-blur-internal
@@ -109,11 +137,14 @@
         (if switchable-type?
           identity
           (fn [evt]
-            (let [v (some-> evt ^js .-target ^js .-value)]
+            (let [e (get-value-evt)
+                  v (:value e)]
               (when (not= v @atom:val)
                 (reset! atom:val v)
                 (if on-change
-                  (on-change {:value v :target @node}))))))
+                  (on-change e))
+                (if on-change--value
+                  (on-change--value v))))))
 
         on-paste-internal
         (if on-change
@@ -124,18 +155,18 @@
                                         (process-paste cur-v)
                                         cur-v)]
                   (on-change {:value  paste-processed
-                              :target @node}))))))]
+                              :target @atom:node}))))))]
     (rc/create-class
       {:display-name "SpaceInput"
 
        :component-did-mount
-       (fn [this]
-         (reset! node (r/dom-node this)))
+                     (fn [this]
+                       (reset! atom:node (r/dom-node this)))
 
        :should-component-update
-       (fn [this cur-argv [f id next-props :as next-argv]]
-         (and (not= @node js/document.activeElement)
-              (not= (get-cur-value) (:value next-props))))
+                     (fn [this cur-argv [f id next-props :as next-argv]]
+                       (and (not= @atom:node js/document.activeElement)
+                            (not= (get-cur-value) (:value next-props))))
 
        :reagent-render
        (fn [{input-name :comp/name
@@ -149,29 +180,29 @@
               ^IMap attrs ; map with other input attributes
               ^IMap data ; map with data attributes
               ^keyword input-type]
-             :as opts}] ;; remember to repeat parameters
+             :as        opts}] ;; remember to repeat parameters
          (let [id-str (if (keyword? id) (name id) (str id))
                -val @atom:val
                data-attrs (render-data-attrs data)]
            [:input.space-ui-input
 
             (cond->
-              {:id           id-str
-               :placeholder  placeholder
-               :class        (if css-class (name css-class))
-               :tabIndex     1
-               :autoFocus    (:autofocus opts)
-               :spellCheck   "false"
-               :required     required?
-               :disabled     disabled?
-               :name         input-name
-               :type         input-type
-               :on-paste     on-paste-internal
-               :on-input     on-input
-               :on-change    on-change-internal
-               :on-key-down  on-key-down
-               :on-focus     on-focus-internal
-               :on-blur      on-blur-internal}
+              {:id          id-str
+               :placeholder placeholder
+               :class       (if css-class (name css-class))
+               :tabIndex    1
+               :autoFocus   (:autofocus opts)
+               :spellCheck  "false"
+               :required    required?
+               :disabled    disabled?
+               :name        input-name
+               :type        input-type
+               :on-paste    on-paste-internal
+               :on-input    on-input
+               :on-change   on-change-internal
+               :on-key-down on-key-down
+               :on-focus    on-focus-internal
+               :on-blur     on-blur-internal}
 
               (not switchable-type?)
               (assoc :defaultValue -val)

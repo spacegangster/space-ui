@@ -4,15 +4,60 @@
 
 
 
-;;;;; Colors
+;;;;; Colors ;;;;;
 
 (def ^:const color-text--placeholders (prim/hsl  0,  0, 40))
-(def ^:const color-lightable--filler  (prim/hsla 0, 20, 94, 0.5))
-(def ^:const color-lightable--base    (prim/hsla 0, 20, 94, 0.7))
+(def ^:const col-fg--secondary (prim/hsl  0,  0, 60))
 (def ^:const color-root-menu          (prim/hsla 0, 20, 94, 0.93))
-(def ^:const color-lightable--rank-2  (prim/hsla 0, 37, 94, 0.81))
-(def ^:const color-lightable--rank-1  (prim/hsla 0, 40, 94, 0.9))
+
+
+
+(def ^:const color:bg:input-on-pane:base
+  "lightable input base"
+  (prim/hsla 0, 20, 98, 0.2))
+
+(def ^:const color:bg:input-on-pane:hover
+  "lightable input base"
+  (prim/hsla 0, 20, 98, 0.5))
+
+(def ^:const color:bg:input-on-pane:focus
+  "lightable input base"
+  (prim/hsla 0, 20, 98, 1))
+
+
+(def ^:const color:bg:input-on-pane--blue
+  (prim/hsla 220, 78, 94, 0.4))
+
+(def ^:const color:bg:input-on-pane--blue:focus
+  (prim/hsla 220, 78, 94, 0.6))
+
+(def ^:const color:border:input-on-pane
+  (prim/hsl 220, 78, 89))
+(def ^:const color:border:control-on-pane "hsl(0, 0%, 80%)")
+
+(def color:bg:pane-on-light
+  "on a light gradient pane loses it's light gaining properties"
+  (prim/hsl 203, 78, 99))
+
+; colors for focusable pane backgrounds
+(def ^:const color-lightable--filler
+  "Color for lightable pane filler"
+  (prim/hsla 0, 20, 94, 0.5))
+
+(def ^:const color-lightable--base
+  "lightable pane base color"
+  (prim/hsla 0, 20, 94, 0.7))
+
+(def ^:const color-lightable--rank-2
+  "lightable pane light focus"
+  (prim/hsla 0, 37, 94, 0.81))
+
+(def ^:const color-lightable--rank-1
+  "lightable pane full focus color"
+  (prim/hsla 0, 40, 94, 0.9))
+
 (def ^:const color-lightable--opaque  (prim/hsl  0, 20, 94))
+
 
 (def ^:const color-focus--plane   (prim/hsla 0, 40, 97, 0.8))
 (def ^:const color-focus--plane2  (prim/hsla 0, 50, 97, 0.99))
@@ -123,6 +168,7 @@
 (def ^:const dim-grid-halfstep-px      (px dim-grid-halfstep))
 (def ^:const dim-grid-header-height-px         (d-step-x-px 6))
 (def ^:const dim-grid-footer-height-px         (d-step-x-px 6))
+(def ^:const dim:grid:nav-item-height-px       (d-step-x-px 6))
 (def ^:const dim-grid-footer-height--mobile-px (d-step-x-px 8))
 
 (def ^:const dim-interpane-gap               (/ dim-step 2))
@@ -136,13 +182,16 @@
 (def ^:const dim-fs-control--default    "13.5px")
 (def ^:const dim-fs-control--larger     "16px")
 (def ^:const dim-fs-content "16px")
+(def ^:const dim-fs-task  dim-fs-content)
+(def ^:const dim-fs-subtask  "14px")
 (def ^:const dim-fs-btn--reg "14px")
 (def ^:const dim-fs-content--focus-mode "18px")
+(def ^:const dim-fs-title "32px")
 (def ^:const dim-fs-control--secondary  "15px")
 (def ^:const dim-fs-hint  "14px")
 
 (def ^:const dim-entry-side-pad          "step x 2"  (d-step-x 2))
-(def ^:const dim-entry-side-pad--mobile "step"   (d-step-x 1))
+(def ^:const dim-entry-side-pad--mobile  "step"   (d-step-x 1))
 (def ^:const dim-entry-side-pad--mobile-px   (px dim-entry-side-pad--mobile))
 (def ^:const dim-note-grid-upper-section-px  (d-step-x-px 3))
 (def ^:const dim-note-grid-lower-section-px  (d-step-x-px 5))

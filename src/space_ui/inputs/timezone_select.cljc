@@ -5,18 +5,6 @@
   [{:option/keys [value label]}]
   [:option {:value value} label])
 
-(def style-rules
-  [:.space-ui-select
-   {:font-size      :1em
-    :font-weight    :inherit
-    :letter-spacing :inherit
-   ;:background     :none
-   ;:border         :none
-    :min-height     :1em
-    :color          :inherit}
-   {:padding :4px
-    :max-width :100%}])
-
 (defn face
   [{field-name :comp/name
     :comp/keys
