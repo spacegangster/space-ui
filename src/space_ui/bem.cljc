@@ -17,7 +17,8 @@
 (defn flatten-modifiers [modifiers]
   (flatten (mapv unfold-modifier-maps modifiers)))
 
-(defn- bem-str-strict [css-class-name modifiers]
+(defn- bem-str-strict
+  [css-class-name modifiers]
   (let [base-class-name (name css-class-name)
         modifiers (flatten-modifiers modifiers)
         -append
@@ -45,6 +46,11 @@
 (assert (= "bem bem--mod1 bem--mod2 bem--mod3 bem--mod5"
            (bem-str :bem :mod1 [:mod2 :mod3] {:mod4 false :mod5 1})))
 
-(defn bem [css-class-name & modifiers]
-  {:class (bem-str-strict css-class-name modifiers)})
+(defn bem
+  "Returns a hash-map like {:class \"your-computed-class ...\"}
+   See bem-str doc for details."
+  ([css-class-name]
+   {:class (cond-> css-class-name (keyword? css-class-name) (name))})
+  ([css-class-name & modifiers]
+   {:class (bem-str-strict css-class-name modifiers)}))
 
