@@ -2,10 +2,19 @@
   (:require [clojure.string :as str]))
 
 (def dim-step 8.0)
+
+(defn rgb [h s l]
+  (str "rgb(" h ", " s ", " l")"))
+(assert (= "rgb(20, 20, 20)" (rgb 20 20 20)))
+
+(defn rgba [h s l a]
+  (str "rgba(" h ", " s", " l", " a ")"))
+(assert (= "rgba(20, 20, 20, 0.3)" (rgba 20 20 20 0.3)))
+
 (defn hsl [h s l]
-  (str "hsl(" h ", " s "%," l"%)"))
+  (str "hsl(" h ", " s "%, " l"%)"))
 (defn hsla [h s l a]
-  (str "hsla(" h ", " s "%," l"%, " a ")"))
+  (str "hsla(" h ", " s"%, " l"%, " a ")"))
 
 (defn autopx [v]
   (cond-> v (number? v) (str "px")))

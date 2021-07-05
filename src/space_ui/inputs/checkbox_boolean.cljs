@@ -68,7 +68,7 @@
             (on-change-complete (get-value-evt))))]
 
     (rc/create-class
-      {:display-name "SpaceInput"
+      {:display-name "SpaceUI_Inputs_Checkbox"
 
        :component-did-mount
        (fn [this]

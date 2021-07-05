@@ -34,7 +34,7 @@
   {:border-radius :2px})
 
 (def pane-frame--larger
-  {:border-radius :4px})
+  {:border-radius "4px !important"})
 
 (defn important [& strings]
   (str (str/join " " strings) " !important"))
@@ -190,37 +190,66 @@
 
 (def pane
   "mixin defining pane borders and background.
-  Also supports hover and focus modifiers
-  plain list mixin"
+  Also supports hover and focus modifiers."
   (list
     (f/assign
       pane-frame
-      {:background sc/color-lightable--base
-       :transition "background .1s ease-in-out"
+      {:background  sc/color-lightable
+       :transition  "background .1s ease-in-out"
+       :will-change :background})
+
+    ; rank1 is the most intense one
+    [:&.g-hover--rank-1
+     {:background (important sc/color:lightable-opaque--rank-1)}]
+    [:&.g-hover--rank-2
+     {:background (important sc/color:lightable-opaque--rank-2)}]
+
+    ; rank1 is the most intense one
+    [:&.g-focus--rank-1
+     {:background sc/color:lightable-opaque--rank-1}]
+    [:&.g-focus--rank-2
+     {:background sc/color:lightable-opaque--rank-2}]))
+
+
+(def pane-alpha
+  "same as pane but w transparent background
+  Also supports hover and focus modifiers"
+  (list
+    (f/assign
+      pane-frame
+      {:background  sc/color-lightable-a--base
+       :transition  "background .1s ease-in-out"
        :will-change :background})
 
     ; rank1 is the most intense one
     [:&.g-hover--rank-1
      {:background (important sc/color-lightable--rank-1)}]
     [:&.g-hover--rank-2
-     {:background (important sc/color-lightable--rank-2)}]
+     {:background (important sc/color:lightable--rank-2)}]
 
     ; rank1 is the most intense one
     [:&.g-focus--rank-1
-     {:background sc/color-lightable--rank-1}]
+     {:background sc/color:lightable-opaque--rank-1}]
     [:&.g-focus--rank-2
-     {:background sc/color-lightable--rank-2}]))
+     {:background sc/color:lightable-opaque--rank-2}]))
+
+
+
+(def mixin:pane-on-light-adaptations
+  {:background sc/color:bg:pane-on-light
+   :box-shadow "0 0 1px 0px hsl(211deg 35% 86%)"
+   :transition "background .1s ease-in-out"})
+
+(def mixin:pane-on-light-adaptations--stronger
+  {:background sc/color:bg:pane-on-light
+   :box-shadow "0 0 4px 0px hsl(211deg 35% 86%)"
+   :transition "background .1s ease-in-out"})
 
 (def pane--on-light
   "mixin defining pane borders and background.
   Also supports hover and focus modifiers
   plain list mixin"
-  (list
-    (f/assign
-      pane-frame
-      {:background    sc/color:bg:pane-on-light
-       :box-shadow    "0 0 4px 0px hsl(211deg 35% 86%)"
-       :transition    "background .1s ease-in-out"})))
+  (list (merge pane-frame mixin:pane-on-light-adaptations--stronger)))
 
 
 (def filler
@@ -256,7 +285,7 @@
 
 (def pane--opaque
   (merge pane-frame
-         {:background sc/color-lightable--opaque}))
+         {:background sc/color-lightable}))
 
 (def placeholded
   [["&:empty::before"

@@ -42,7 +42,7 @@
        :place-items       "stretch center"}
       [:&>.media
        {:cursor :pointer}]
-      (gs/at-media sc/mq-phone-and-smaller
+      (gs/at-media sc/mq:phone-and-smaller
         [:&>.media
          {:max-height :50px
           :overflow :hidden}])]]))

@@ -1,5 +1,6 @@
 (ns space-ui.inputs.date-time-2
-  "Uses a combination of date and time inputs"
+  "A box with date and time inputs.
+   And Save and Cancel buttons"
   (:require [common.const.gradients :as gradients]
             ["../util/feature-detect" :refer [isDateSupported isTimeSupported]]
             [garden.core :as garden]
@@ -35,11 +36,15 @@
 
 
 (defn ld-str [^js/Date d]
-  (if-not d
-    ""
-    (str "" (.getFullYear d)
-         "-" (gs/padNumber (inc (.getMonth d)) 2)
-         "-" (gs/padNumber (.getDate d) 2))))
+  (try
+    (if-not d
+      ""
+      (str "" (.getFullYear d)
+           "-" (gs/padNumber (inc (.getMonth d)) 2)
+           "-" (gs/padNumber (.getDate d) 2)))
+    (catch js/Error e
+      (def e1 e))))
+
 
 (defn lt-str [^js/Date d]
   (if-not d
@@ -67,6 +72,7 @@
     on-submit      :comp/on-submit
     on-cancel      :comp/on-cancel
     id-base        :comp/id-base}]
+  (assert (instance? js/Date value) (str "value must be a date here, got " (type value)))
   (let [[dv tv] [(ld-str value) (lt-str value)]
         atom:date-str (rc/atom dv)
         atom:time-str (rc/atom tv)
@@ -167,10 +173,10 @@
         (if on-submit
           [:div.g-gap2.g-margin-top-1.g-grid-cols.g-grid-cols--space-between
            [btn/cta-blue
-            {:btn/label    "[ok]"
+            {:btn/label    "Save"
              :btn/on-click -on-submit}]
            [btn/btn
-            {:btn/label "[cancel]"
+            {:btn/label "Cancel"
              :btn/on-click on-cancel}]])]])))
 
 

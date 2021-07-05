@@ -44,19 +44,29 @@
   "Color for lightable pane filler"
   (prim/hsla 0, 20, 94, 0.5))
 
-(def ^:const color-lightable--base
+
+(def ^:const color-lightable
+  (prim/hsl  0, 20, 94))
+
+(def ^:const color-lightable-a--base
   "lightable pane base color"
   (prim/hsla 0, 20, 94, 0.7))
 
-(def ^:const color-lightable--rank-2
+(def ^:const color:lightable--rank-2
   "lightable pane light focus"
   (prim/hsla 0, 37, 94, 0.81))
+
+(def ^:const color:lightable-opaque--rank-2
+  "lightable pane light focus"
+  (prim/hsl 0, 37, 96))
 
 (def ^:const color-lightable--rank-1
   "lightable pane full focus color"
   (prim/hsla 0, 40, 94, 0.9))
 
-(def ^:const color-lightable--opaque  (prim/hsl  0, 20, 94))
+(def ^:const color:lightable-opaque--rank-1
+  "lightable pane full focus color"
+  (prim/hsl 0, 40, 99))
 
 
 (def ^:const color-focus--plane   (prim/hsla 0, 40, 97, 0.8))
@@ -232,6 +242,7 @@
 (def ^:const dim-bp-ipad-height--landscape "768"  768)
 (def ^:const dim-bp-ipad-height--landscape-px "768px"  "768px")
 
+(def ^:const dim-iphone-x-width  375)
 (def ^:const dim-bp-phones  500)
 (def ^:const dim-bp-phones-px "500"  (px dim-bp-phones))
 
@@ -260,15 +271,15 @@
   "media query for the dark theme"
   {:prefers-color-scheme :color-schemes/dark})
 
-(def ^:const mq-smaller-than-ipad
+(def mq:smaller-than-ipad
   "media queries for devices smaller than ipad (landscape mode)"
   [{:max-width (px (dec dim-bp-ipad-width--landscape))}])
 
-(def ^:const mq-smaller-than-ipad--portrait
+(def mq:smaller-than-ipad--portrait
   "media queries for devices smaller than ipad (landscape mode)"
   [{:max-width (px (dec dim-bp-mobile))}])
 
-(def ^:const mq-phone-and-smaller
+(def mq:phone-and-smaller
   "media queries for phones and smaller devices (max-width < 500)"
   [{:max-width dim-bp-phones-px}])
 
@@ -291,6 +302,9 @@
 (def ^:const mq-fullscreen-branches-on
   "media queries when fullscreen branches should be on (mobile mode)"
   [{:max-width dim-bp-mobile-px}])
+
+(def mq:iphone-x-or-wider
+  [{:min-width (px dim-iphone-x-width)}])
 
 (def ^:const mq-fullscreen-branches-off
   "media queries when fullscreen branches should be off (desktop mode)"

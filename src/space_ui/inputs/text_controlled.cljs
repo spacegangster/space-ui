@@ -117,7 +117,7 @@
 
 
     (rc/create-class
-      {:display-name "SpaceInput"
+      {:display-name "SpaceUI_Inputs_TextControlled"
 
        :component-did-mount
        (fn [this]

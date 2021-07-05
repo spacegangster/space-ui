@@ -157,7 +157,7 @@
                   (on-change {:value  paste-processed
                               :target @atom:node}))))))]
     (rc/create-class
-      {:display-name "SpaceInput"
+      {:display-name "SpaceUI_Input"
 
        :component-did-mount
                      (fn [this]

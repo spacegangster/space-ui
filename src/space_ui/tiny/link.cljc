@@ -168,7 +168,7 @@
 
 (defn w-icon
   "Box-like link"
-  [{:link/keys [icon icon-alt icon-size icon-after
+  [{:link/keys [icon icon-alt icon-after
                 title on-click class href label attrs goal-id
                 blank? target-blank? outer? colorscheme? underline?
                 main? luminous? active? round? bordered?] :as params}]
@@ -183,9 +183,10 @@
                  (if class (str " " (name class)))))
         on-click (or on-click (calc-reach-goal goal-id))]
     [:a.g-nolink
-     (cond-> {:href href :title (or title icon-alt)
+     (cond-> {:href         href
+              :title title
               on-click-prop on-click
-              :class css-class}
+              :class        css-class}
              attrs (->> (merge attrs))
              outer? (assoc :rel "noopener")
              (or outer? target-blank? blank?) (assoc :target "_blank"))
@@ -193,10 +194,12 @@
        [:div.link__icon
         {:class (if colorscheme? :g-colorscheme-control-icon)
          :title icon-alt}
-        [svgs/icon icon #:icon{:size icon-size :active? active? :colorscheme? colorscheme?}]])
+        icon])
      (if label
        [:div.link__label {:class (if icon "link__label--ml")} label])
      (if icon-after
        [:div.link__icon.link__icon--after
-        [svgs/icon icon {:active? active?}]])]))
+        {:class (if colorscheme? :g-colorscheme-control-icon)
+         :title icon-alt}
+        icon-after])]))
 

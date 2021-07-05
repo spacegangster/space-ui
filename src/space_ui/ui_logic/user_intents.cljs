@@ -1,49 +1,25 @@
 (ns space-ui.ui-logic.user-intents
   (:require [commons.constants.keycodes :as kc]
-            [commons.dom :as dom]
-            [commons.constants.user-intents :as intents]
-            [commons.logging :as log]))
+            [space-ui.util.dom :as dom]))
 
 
-(defn- interpret-user-intent [^js/String target-value react-synth-evt]
+(defn react-evt->keycode-kw [^js react-synth-evt]
+  (some-> react-synth-evt (.-keyCode) kc/kc->kw))
+
+
+(defn- interpret-user-intent
+  [^js/String target-value ^js react-synth-evt]
   (let [shift?           (.-shiftKey react-synth-evt)
         window-selection (js/window.getSelection)
         v-length         ^js/Number (.-length target-value)
-        key-code         (.-keyCode react-synth-evt)
+        key-code-kw      (react-evt->keycode-kw react-synth-evt)
         key*             (.-key react-synth-evt)
         cursor-position  (.-focusOffset window-selection)]
-    (case (kc/kc->kw key-code)
-      ::kc/enter        ::intents/create
-      ::kc/escape       ::intents/escape
-      ::kc/comma        (if (= key* ",") ::intents/comma)
-      ::kc/arrow-down   ::intents/focus-down
-      ::kc/arrow-up     ::intents/focus-up
-      ::kc/arrow-left   (if (= 0 cursor-position) ::intents/focus-prev)
-      ::kc/arrow-right  (if (= v-length cursor-position) ::intents/focus-next)
-      ::kc/semicolon    (case key*
-                          ":" ::intents/colon
-                          ";" ::intents/semicolon
-                          nil)
-      ::kc/tab          (if shift?
-                          ::intents/shift-tab
-                          ::intents/tab)
-      ::kc/backspace    (if (= 0 v-length)
-                          ::intents/delete)
-      nil)))
-
-
-(defn- interpret-user-intent-2 [^js/String target-value react-synth-evt]
-  (let [shift?           (.-shiftKey react-synth-evt)
-        window-selection (js/window.getSelection)
-        v-length         ^js/Number (.-length target-value)
-        key-code         (.-keyCode react-synth-evt)
-        key*             (.-key react-synth-evt)
-        cursor-position  (.-focusOffset window-selection)]
-    (case (kc/kc->kw key-code)
+    (case key-code-kw
       ::kc/n            :intents/create
-      ::kc/enter        :intents/create
+      ::kc/enter        :intents/commit
       ::kc/escape       :intents/escape
-      ::kc/comma        (if (= key* ",") ::intents/comma)
+      ::kc/comma        (if (= key* ",") :intents/comma)
       ::kc/arrow-down   :intents/focus-down
       ::kc/arrow-up     :intents/focus-up
       ::kc/arrow-left   (if (= 0 cursor-position) :intents/focus-prev)
@@ -58,6 +34,17 @@
       ::kc/backspace    (if (= 0 v-length)
                           :intents/delete)
       nil)))
+
+
+(defn assert-intents2 [intents]
+  (when intents
+    (assert (map? intents) "must be a map")
+    (when (not-empty intents)
+      (assert (= "intents" (namespace (ffirst intents))) "intents keys be in the 'intents namespace"))))
+
+(assert-intents2 nil)
+(assert-intents2 {})
+(assert-intents2 {:intents/create 1})
 
 
 (defn key-down-evt->intent-evt
@@ -76,56 +63,26 @@
    boolean repeat
    boolean shiftKey
    number which"
-  [react-evt]
-  (let [t      (.-target react-evt)
+  [^js react-evt]
+  (let [t (.-target react-evt)
         dataset (aget t "dataset")
-        v      (cond
-                 (#{"INPUT" "TEXTAREA"} (.-tagName t)) (.-value t)
-                 (aget dataset "textMode") (.-textContent t)
-                 :else (.-innerHTML t))
+        keycode-kw (react-evt->keycode-kw react-evt)
+        v (cond
+            (#{"INPUT" "TEXTAREA"} (.-tagName t)) (.-value t)
+            (aget dataset "textMode") (.-textContent t)
+            :else (.-innerHTML t))
         intent (interpret-user-intent v react-evt)]
     (when intent
-      {:intent intent
-       :value  v
-       :target t
-       :entity-id (dom/evt->entity-id react-evt)
-       :data   (some-> dataset dom/dataset->clj-raw)})))
-
-
-(defn key-down-evt->intent-evt-2
-  "Parses react keydown evt and constructs an intent evt if intent is recognised.
-   @returns map/nil
-
-   boolean altKey
-   number charCode
-   boolean ctrlKey
-   boolean getModifierState(key)
-   string key
-   number keyCode
-   string locale
-   number location
-   boolean metaKey
-   boolean repeat
-   boolean shiftKey
-   number which"
-  [native-evt]
-  (let [t (.-target native-evt)
-        dataset (aget t "dataset")
-        v      (cond
-                 (#{"INPUT" "TEXTAREA"} (.-tagName t)) (.-value t)
-                 (aget dataset "textMode") (.-textContent t)
-                 :else (.-innerHTML t))
-        intent (interpret-user-intent-2 v native-evt)]
-    (when intent
-      {:evt/intent    intent
-       :evt/value     v
-       :evt/target    t
-       :evt/entity-id (dom/evt->entity-id native-evt)
-       :evt/data      (some-> dataset dom/dataset->clj-raw)})))
+      {:evt/intent     intent
+       :evt/keycode-kw keycode-kw
+       :evt/value      v
+       :evt/target     t
+       :evt/entity-id  (dom/evt->entity-id react-evt)
+       :evt/data       (some-> dataset dom/dataset->clj-raw)})))
 
 
 (defn handle-intent-with-intents-map [intents react-key-evt]
-  (let [evt (some-> react-key-evt key-down-evt->intent-evt-2)]
+  (let [evt (some-> react-key-evt key-down-evt->intent-evt)]
     (when-let [intent-handler (get intents (:evt/intent evt))]
       (.preventDefault react-key-evt)
       (intent-handler evt))))

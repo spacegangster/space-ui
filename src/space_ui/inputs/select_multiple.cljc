@@ -6,7 +6,8 @@
   #?(:cljs
      (:require [commons.logging :as log]
                [reagent.core :as rc]
-               [commons.functions :as f])))
+               [commons.functions :as f]))
+  #?(:clj (:import (java.util Set))))
 
 
 (def class:base "select-multi-mk1")
@@ -97,7 +98,8 @@
     :comp/keys
     [on-change on-change--value
      options
-     ^set value] :as opts}]
+     value]  ; set
+    :as opts}]
   (let [value (or value #{})
         atom:val #?(:cljs (rc/atom value) :clj (atom value))
         val-format (ui.f/options->format options)
@@ -108,3 +110,4 @@
     (fn []
       ^{:key (str @atom:val)}
       [face-simple opts atom:val])))
+

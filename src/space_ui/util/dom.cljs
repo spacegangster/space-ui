@@ -69,14 +69,19 @@
 (defn get-element-by-id [id]
   (js/document.getElementById id))
 
-(defn parse-elem-eid [elem]
-  (some-> elem (jsget "dataset" "entityId") str->id))
+(defn ^js/Number parse-int-or-nil [v]
+  (let [x (js/parseInt v)]
+    (if (js/isNaN x) nil x)))
+
+(defn parse-elem-eid [^js/Element elem]
+  (let [eid-raw (jsget elem "dataset" "entityId")]
+    (or (parse-int-or-nil eid-raw) eid-raw)))
+
+(defn evt->entity-id [^js evt]
+  (parse-elem-eid (.-currentTarget evt)))
 
 (defn evt->data-prop [^js react-evt prop]
   (some-> react-evt (jsget "currentTarget" "dataset" prop)))
-
-(defn evt->entity-id [^js react-evt]
-  (some-> (evt->data-prop react-evt "entityId") str->id))
 
 (defn evt->data-idx [^js react-evt]
   (evt->data-prop react-evt "idx"))
@@ -136,16 +141,6 @@
                 (assoc! mem (keyword (camel->dashes key)) (aget ds key)))
               (transient {})
               keys))))
-
-(defn parse-int-or-nil [v]
-  (let [x (js/parseInt v)]
-    (if (js/isNaN x) nil x)))
-
-(defn parse-entity-id [elem]
-  (parse-int-or-nil (jsget elem "dataset" "entityId")))
-
-(defn parse-evt-entity-id [evt]
-  (-> evt (jsget "currentTarget" "dataset" "entityId") parse-int-or-nil))
 
 (defn try-parse-int [str]
   (let [parse-res (js/parseInt str)]

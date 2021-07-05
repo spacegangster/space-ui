@@ -1,4 +1,6 @@
-(ns space-ui.date-time
+(ns
+  ^{:deprecated true}
+  space-ui.date-time
   (:require [reagent.dom :as r]
             [reagent.core :as rc]
             [goog.string :as gs]
@@ -71,7 +73,7 @@
                   (on-change {:value  paste-processed
                               :target @node}))))))]
     (rc/create-class
-      {:display-name "SpaceInputDateTime"
+      {:display-name "SpaceUI_Inputs_DateTime"
 
        :component-did-mount
        (fn [this]

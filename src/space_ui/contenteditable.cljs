@@ -12,7 +12,7 @@
 
 ; text mode atttr
 
-(defn contenteditable
+(defn face
   [id
    {:keys
     [^IFn on-change
@@ -25,6 +25,7 @@
      ^boolean text-mode?
      ^IMap intents]
     :as opts}]
+  (user-intents/assert-intents2 intents)
   (let [node (rc/atom nil)
         state-value (atom nil)
 
@@ -69,7 +70,7 @@
                   (on-change {:value  paste-processed
                               :target @node}))))))]
     (rc/create-class
-      {:display-name "ContentEditable"
+      {:display-name "SpaceUI_ContentEditable"
 
        :component-did-mount
          (fn [this]
@@ -110,5 +111,3 @@
                  :on-focus                       on-focus
                  :on-blur                        on-blur-internal}
                 data-attrs (merge data-attrs))]))})))
-
-(def face contenteditable)

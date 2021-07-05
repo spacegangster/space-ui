@@ -264,7 +264,7 @@
 
 (def pane--opaque
   (merge pane-frame
-    {:background c/color-lightable--opaque}))
+         {:background c/color-lightable}))
 
 (def placeholded
   [["&:empty::before"

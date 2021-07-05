@@ -1,8 +1,7 @@
 (ns space-ui.svgs
   "This can render icons like
   [icon fat-burger] -> <div class=svg-icon><svg>...</svg></div>"
-  (:require [space-ui.bem :as bem]
-            [common.functions :as f]))
+  (:require [space-ui.bem :as bem]))
 
 
 (def fat-burger
@@ -12,7 +11,7 @@
 (defn vec-w-attrs
   [[n-name ?props & children :as v] params]
   (if (map? ?props)
-    (into [n-name (f/assign ?props params)] children)
+    (into [n-name (merge ?props params)] children)
     (into [n-name params] (cons ?props children))))
 
 (defn force-params [icon params]

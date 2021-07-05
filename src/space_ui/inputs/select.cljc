@@ -1,6 +1,6 @@
 (ns space-ui.inputs.select
-  (:require [reagent.core :as rc]
-            [space-ui.util.functions :as ui.f]
+  #?(:cljs (:require [reagent.core :as rc]))
+  (:require [space-ui.util.functions :as ui.f]
             [space-ui.style.constants :as sc]))
 
 

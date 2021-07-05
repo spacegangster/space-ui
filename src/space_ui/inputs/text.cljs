@@ -169,7 +169,7 @@
         css-class-base (str class:base " " class:base "--" (name appearance))]
 
     (rc/create-class
-      {:display-name "SpaceInput"
+      {:display-name "SpaceUI_Inputs_Text"
 
        :component-did-mount
        (fn [this]

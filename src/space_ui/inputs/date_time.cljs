@@ -72,7 +72,7 @@
                   (on-change {:value  paste-processed
                               :target @node}))))))]
     (rc/create-class
-      {:display-name "SpaceInputDateTime"
+      {:display-name "SpaceUI_Inputs_DateTime"
 
        :component-did-mount
        (fn [this]

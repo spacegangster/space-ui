@@ -48,7 +48,7 @@
                       ["control label" :auto]
                       [:18px :auto])}]
 
-   (gs/at-media sc/mq-phone-and-smaller
+   (gs/at-media sc/mq:phone-and-smaller
      [:&--wrap-mobile
       {:display :grid
        :grid-template
