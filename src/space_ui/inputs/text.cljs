@@ -14,6 +14,8 @@
 :input.type/email
 :input.type/password
 :input.type/text
+:input.type/time
+:input.type/date
 :input.type/number
 
 (defn- -data-attrs-mapper [[k v]]

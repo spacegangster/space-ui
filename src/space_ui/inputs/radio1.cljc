@@ -21,10 +21,8 @@
      [:&__label]]
 
     [".radio-item__input:checked + .radio-item__label"
-     {:color       :blue}]
+     {:color       :blue}]))
       ;:font-weight :bold}]
-
-    [:.button]))
 
 (def style-buttons
   [:style

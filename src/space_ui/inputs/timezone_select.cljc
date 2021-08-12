@@ -17,7 +17,6 @@
                          e #:evt{:type   :event-types/change
                                  :value  (not-empty v)
                                  :target t}]
-                     (prn ::e e)
                      (if on-change
                        (on-change e))))
            :clj nil)]

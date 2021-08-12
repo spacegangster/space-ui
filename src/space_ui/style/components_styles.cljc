@@ -4,13 +4,13 @@
 (def space-lists
   (list
     [:.space-ul1
-     {:padding-inline-start :1em
-      :padding-block-start  :1em
-      :padding-block-end    :1em
-      :list-style-type      :disc}]
+     {:padding-left    :1em
+      :padding-top     :1em
+      :padding-bottom  :1em
+      :list-style-type :disc}]
     [:.space-ul2
-     {:padding-inline-start :1.5em
-      :padding-block-start  :0.5em
-      :padding-block-end    :1.0em
-      :list-style-type      :circle}]))
+     {:padding-left    :1.5em
+      :padding-top     :0.5em
+      :padding-bottom  :1.0em
+      :list-style-type :circle}]))
 

@@ -32,10 +32,8 @@
       [:&__label]]]
 
     [(str sel:item__input":checked + " sel:item__label)
-     {:color       :blue}]
+     {:color       :blue}]))
       ;:font-weight :bold}]
-
-    [:.button]))
 
 (def style-buttons
   [:style

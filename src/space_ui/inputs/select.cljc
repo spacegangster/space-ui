@@ -1,5 +1,6 @@
 (ns space-ui.inputs.select
-  #?(:cljs (:require [reagent.core :as rc]))
+  #?(:cljs (:require [reagent.core :as rc]
+                     [reagent.dom]))
   (:require [space-ui.util.functions :as ui.f]
             [space-ui.style.constants :as sc]))
 
@@ -44,6 +45,7 @@
     [id
      value
      options
+     auto-focus?
      on-change
      on-change--value
      css-class]}]
@@ -56,9 +58,10 @@
 
     [:select.space-ui-select
      (cond->
-       {:id        id
-        :name      field-name
-        :value     val-fmt}
+       {:id         id
+        :auto-focus auto-focus?
+        :name       field-name
+        :value      val-fmt}
        css-class (assoc :class css-class)
        on-change-internal1 (assoc :on-change on-change-internal1))
 

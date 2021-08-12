@@ -14,7 +14,8 @@
 (def color-text--stage-1 (prim/hsl 0 0 99))
 (def color-text--stage-2 (prim/hsl 0 0 95))
 
-(def color-glow--off (prim/hsl 0 0 93))
+(def color-glow--off     (prim/hsl 0 0 93))
+(def color-glow--off:a   (prim/hsla 0 0 93 0.7))
 (def color-glow--stage-1 (prim/hsl 0 0 99))
 (def color-glow--stage-2 (prim/hsl 0 0 95))
 

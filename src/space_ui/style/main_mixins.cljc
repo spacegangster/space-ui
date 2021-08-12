@@ -13,7 +13,11 @@
    {:width  (cond-> w (number? w) (str "px"))
     :height (cond-> h (number? h) (str "px"))}))
 
-
+(def rotate-90deg
+  {:transform-origin "50% 0"
+   :transform        "rotate(-90deg)"
+   :will-change      "transform"
+   :transition       "transform 180ms cubic-bezier(.47,1.64,.41,.8)"})
 
 (def display-centerflex
   {:display :flex
@@ -131,13 +135,16 @@
 (def border-default
   {:border (str "1px solid " sc/color:border:control-on-pane)})
 
+(def border-btn-round
+  {:border (str "1px solid " sc/color:border:btn-round-on-pane)})
+
 (def button--round
   [:&
    {:height        :25px
     :width         :25px
     :border-radius :50%}
    {:padding        0}
-   border-default
+   border-btn-round
    [:&:hover
     {:border-color sc/color-control--textual-hovered}]])
 

@@ -6,6 +6,7 @@
             [garden.core :as garden]
             [reagent.core :as rc]
             [goog.string :as gs]
+            [space-ui.inputs.text :as inputs.text]
             [space-ui.style.constants :as sc]
             [space-ui.tiny.btn :as btn]))
 
@@ -98,30 +99,27 @@
               (on-change-v new-date))))
 
         on-input__date--text
-        (fn [^js r-evt]
-          (let [v (-> r-evt (.-target) (.-value) conform-date-val)]
-            (reset! atom:date-str v)
-            (-on-change)))
+        (fn [v]
+          (reset! atom:date-str (conform-date-val v))
+          (-on-change))
 
         on-input__date
-        (fn [^js r-evt]
-          (let [v (-> r-evt (.-target) (.-value))]
-            (reset! atom:date-str v)
-            (-on-change)
-            (prn ::date (aget r-evt "target" "value"))))
+        (fn [v]
+          (reset! atom:date-str v)
+          (-on-change))
+
+        -on-time-commit -on-submit
+        -on-date-commit -on-submit
 
         on-input__time--text
-        (fn [^js r-evt]
-          (let [v (-> r-evt (.-target) (.-value) conform-time-val)]
-            (reset! atom:time-str v)
-            (-on-change)))
+        (fn [v]
+          (reset! atom:time-str (conform-time-val v))
+          (-on-change))
 
         on-input__time
-        (fn [^js r-evt]
-          (let [v (-> r-evt (.-target) (.-value))]
-            (reset! atom:time-str v)
-            (-on-change)
-            (prn ::time (aget r-evt "target" "value"))))]
+        (fn [v]
+          (reset! atom:time-str v)
+          (-on-change))]
 
     (fn []
       [:div.space-ui-date-time-2.g-grid-rows.g-gap2
@@ -132,18 +130,17 @@
          [:label.space-ui-date-time-2__row__label
           {:for date-id} "date"]
 
-         (if date-supported?
-           [:input.space-ui-date-time-2__row__input
-            {:id           date-id
-             :type         "date"
-             :defaultValue dv
-             :on-input     on-input__date}]
-           [:input.space-ui-date-time-2__row__input
-            {:id           date-id
-             :type         "text"
-             :placeholder  "YYYY-MM-DD"
-             :defaultValue dv
-             :on-input     on-input__date--text}])]
+         [inputs.text/face
+          {:comp/id               date-id
+           :comp/css-class        "space-ui-date-time-2__row__input"
+           :comp/input-type       (if date-supported? :input.type/date :input.type/text)
+           :comp/appearance       :appearance/transparent
+           :comp/value            dv
+           :comp/placeholder      (if-not date-supported? "YYYY-MM-DD")
+           :comp/intents          {:intents/commit -on-date-commit}
+           :comp/on-change--value (if time-supported?
+                                    on-input__date
+                                    on-input__date--text)}]]
 
         (if-not date-supported?
           [:div.g-hint "Date like 2020-06-14"])]
@@ -153,19 +150,18 @@
         [:div.g-grid-cols-compact.g-gap2
          [:label.space-ui-date-time-2__row__label
           {:for time-id} "time"]
-         (if time-supported?
-           [:input.space-ui-date-time-2__row__input
-            {:id           time-id
-             :type         "time"
-             :defaultValue tv
-             :on-input     on-input__time}]
 
-          [:input.space-ui-date-time-2__row__input
-           {:id           time-id
-            :type         "time"
-            :placeholder  "HH:mm"
-            :defaultValue tv
-            :on-input     on-input__time--text}])]
+         [inputs.text/face
+          {:comp/id               time-id
+           :comp/css-class        "space-ui-date-time-2__row__input"
+           :comp/input-type       (if time-supported? :input.type/time :input.type/text)
+           :comp/appearance       :appearance/transparent
+           :comp/value            tv
+           :comp/placeholder      (if-not time-supported? "HH:mm")
+           :comp/intents          {:intents/commit -on-time-commit}
+           :comp/on-change--value (if time-supported?
+                                    on-input__time
+                                    on-input__time--text)}]]
 
         (if-not time-supported?
           [:div.g-hint "24hr time like 16:20 or 03:01"])
