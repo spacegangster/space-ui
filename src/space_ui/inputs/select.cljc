@@ -40,18 +40,26 @@
 
 
 (defn face
+  "Send :comp/default-value to use it as an autonomous form component.
+   Send :comp/value to use it as a controlled component."
   [{field-name :comp/name
     :comp/keys
     [id
      value
+     default-value
      options
      auto-focus?
      on-change
      on-change--value
-     css-class]}]
+     css-class]
+    :as params}]
   (let [value-transform (ui.f/options->transform options)
         value-format    (ui.f/options->format options)
-        val-fmt (value-format value)
+        ;;
+        use-dflt-val?   (contains? params :comp/default-value)
+        val-fmt         (if-not use-dflt-val? (value-format value))
+        val-dflt-fmt    (if use-dflt-val? (value-format default-value))
+        ;;
         on-change-internal1
         #?(:cljs (rc/partial on-change-internal value-transform on-change on-change--value)
            :clj nil)]
@@ -60,9 +68,10 @@
      (cond->
        {:id         id
         :auto-focus auto-focus?
-        :name       field-name
-        :value      val-fmt}
-       css-class (assoc :class css-class)
+        :name       field-name}
+       (not use-dflt-val?) (assoc :value val-fmt)
+       use-dflt-val?       (assoc :default-value val-dflt-fmt)
+       css-class           (assoc :class css-class)
        on-change-internal1 (assoc :on-change on-change-internal1))
 
      (for [item options]

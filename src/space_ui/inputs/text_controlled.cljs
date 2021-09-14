@@ -36,6 +36,7 @@
      value-atom
      id
      css-class css-mods
+     ^boolean autofocus?
      ^boolean disabled?
      ^boolean required?
      ^IMap attrs ; map with other input attributes
@@ -135,6 +136,7 @@
               value
               id
               css-class
+              ^boolean autofocus?
               ^boolean disabled?
               ^boolean required?
               ^IMap attrs ; map with other input attributes
@@ -153,7 +155,7 @@
                :placeholder placeholder
                :class       css-class
                :tabIndex    1
-               :autoFocus   (:autofocus opts)
+               :autoFocus   autofocus?
                :spellCheck  "false"
                :required    required?
                :disabled    disabled?

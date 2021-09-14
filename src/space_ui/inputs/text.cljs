@@ -9,11 +9,13 @@
             [commons.logging :as log]
             [common.functions :as f]
             [commons.functions :as u]
-            [space-ui.style.constants :as sc]))
+            [space-ui.style.constants :as sc]
+            [space-ui.bem :as bem]))
 
 :input.type/email
 :input.type/password
 :input.type/text
+:input.type/textarea
 :input.type/time
 :input.type/date
 :input.type/number
@@ -51,7 +53,8 @@
       :color          :inherit
       :text-overflow  :ellipsis}
 
-     ["&[type=text]:empty"
+     [:&--textarea
+      "&[type=text]:empty"
       "&[type=password]:empty"
       "&[type=number]:empty"
       "&[type=email]:empty"
@@ -72,6 +75,10 @@
        :background    sc/color:bg:input-on-pane:base}
       [:&:focus
        {:background sc/color:bg:input-on-pane:focus}]]
+
+     [:&--textarea
+      {:height :initial}]
+
      [:&--blue-on-white
       {:background sc/color:bg:input-on-pane--blue}
       [:&:focus
@@ -96,6 +103,7 @@
      id
      css-class
      ^boolean disabled?
+     ^boolean autofocus?
      ^boolean required?
      ^IMap attrs ; map with other input attributes
      ^IMap data ; map with data attributes
@@ -168,7 +176,7 @@
                               :evt/target @atom:node}))))))
 
         appearance (or appearance :appearance/text-on-pane-v1)
-        css-class-base (str class:base " " class:base "--" (name appearance))]
+        css-class-base (bem/bem-str class:base appearance)]
 
     (rc/create-class
       {:display-name "SpaceUI_Inputs_Text"
@@ -198,16 +206,20 @@
 
          (let [id-str (if (keyword? id) (name id) (str id))
                -val @atom:val
+               textarea? (= :input.type/textarea input-type)
+               input-tag (if textarea? :textarea :input)
                data-attrs (render-data-attrs data)
-               css-class (cond-> css-class-base, css-class (str " " (name css-class)))]
+               css-class (cond-> css-class-base,
+                                 1 (str " " class:base "--" (name input-tag))
+                                 css-class (str " " (name css-class)))]
 
-           [:input
+           [input-tag
             (cond->
               {:id          id-str
                :placeholder placeholder
                :class       css-class
                :tabIndex    1
-               :autoFocus   (:autofocus opts)
+               :autoFocus   autofocus?
                :spellCheck  "false"
                :required    required?
                :disabled    disabled?
@@ -220,6 +232,7 @@
                :defaultValue -val
                :on-blur     on-blur-internal}
 
+              textarea? (assoc :rows 2)
               attrs (f/assign attrs)
               data-attrs (f/assign data-attrs))]))})))
 

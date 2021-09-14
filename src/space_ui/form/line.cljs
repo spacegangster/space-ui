@@ -11,7 +11,8 @@
             [space-ui.bem :as vu]
             [space-ui.primitives :as prim]
             [space-ui.inputs.text :as input]
-            [space-ui.inputs.checkbox-boolean :as checkbox]))
+            [space-ui.inputs.checkbox-boolean :as checkbox]
+            [space-ui.bem :as bem]))
 
 
 (def style-rules
@@ -43,6 +44,9 @@
         ["hint" :auto]
         [:auto])}]]
 
+   [:&--textarea
+    {:min-height (sc/d-step-x-px 6)}]
+
    [:&--checkbox
     {:grid-template (prim/grid-template
                       ["control label" :auto]
@@ -68,7 +72,9 @@
     {:grid-area      :label
      :letter-spacing :0.03em
      :place-self     "center start"}
-    {:min-width :100px}]
+    {:min-width :100px}
+    [:&--textarea
+     {:place-self :start}]]
 
    [:&__control
     {:grid-area  :control
@@ -106,6 +112,7 @@
 
 (def controls
   {:input.type/text     input/face
+   :input.type/textarea input/face
    :input.type/email    input/face
    :input.type/checkbox checkbox/face
    :input.type/password input/face
@@ -123,6 +130,7 @@
      ^string id
      ^string css-class
      label
+     ^keyword appearance
      ^string placeholder
      ^boolean read-only?
      ^boolean required?
@@ -137,19 +145,21 @@
         use-value-key? (not (#{:input.type/color} input-type))
         control-first? (#{:input.type/checkbox} input-type)
         wrap-mobile? (and (not no-wrap?) (wide-input? input-type))
+        label-elem [:div (bem/bem :line__label input-type) label]
         control
         (or control
             [(get controls input-type)
              (cond->
-               #:comp{:value              value
-                      :id                 id
-                      :disabled?          read-only?
-                      :required?          required?
-                      :input-type         input-type
-                      :placeholder        placeholder
-                      :on-change          on-change
-                      :on-change-complete on-change-complete
-                      :name               input-name}
+               {:comp/value              value
+                :comp/id                 id
+                :comp/disabled?          read-only?
+                :comp/required?          required?
+                :comp/input-type         input-type
+                :comp/placeholder        placeholder
+                :comp/appearance         appearance
+                :comp/on-change          on-change
+                :comp/on-change-complete on-change-complete
+                :comp/name               input-name}
                input-attrs (assoc :comp/attrs input-attrs))])
 
         control-elem
@@ -177,13 +187,13 @@
       :title           label}
 
      (if (and label (not control-first?))
-       [:div.line__label label])
+       label-elem)
 
      ^{:key (if use-value-key? value id)}
      control-elem
 
      (if (and label control-first?)
-       [:div.line__label label])
+       label-elem)
 
      (if hint
        [:div.line__hint  hint])

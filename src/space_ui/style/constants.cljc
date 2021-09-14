@@ -10,6 +10,11 @@
 (def col-fg--secondary (prim/hsl  0,  0, 60))
 (def color-root-menu          (prim/hsla 0, 20, 94, 0.93))
 
+(def hsl:shadow-darker
+  {:h 20, :s 50, :l 20, :a 0.3})
+(def hsl:shadow-glow
+  {:h 20, :s 80, :l 80, :a 0.6})
+
 
 
 (def color:bg:input-on-pane:base
@@ -175,6 +180,7 @@
 (defn min-max [min max]
   (str "minmax(" (prim/autoname min) ", " (prim/autoname max) ")"))
 
+(def dim:radius2                       (d-step-x-px 0.5))
 (def dim-grid-halfstep         (/ dim-step 2))
 (def dim-grid-halfstep-px      (px dim-grid-halfstep))
 (def dim-grid-header-height-px         (d-step-x-px 6))
@@ -277,8 +283,12 @@
   "media queries for devices smaller than ipad (landscape mode)"
   [{:max-width (px (dec dim-bp-ipad-width--landscape))}])
 
-(def mq:smaller-than-ipad--portrait
-  "media queries for devices smaller than ipad (landscape mode)"
+(def mq:lte-ipad--portrait
+  "media queries for devices narrower or equal than ipad (portrait mode)"
+  [{:max-width (px dim-bp-mobile)}])
+
+(def mq:lt-ipad--portrait
+  "media queries for devices narrower than ipad (portrait mode)"
   [{:max-width (px (dec dim-bp-mobile))}])
 
 (def mq:phone-and-smaller

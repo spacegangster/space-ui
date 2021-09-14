@@ -33,6 +33,7 @@
     [placeholder
      on-blur
      on-change
+     autofocus?
      on-intent
      on-key-down
      process-paste] :as opts}]
@@ -99,7 +100,7 @@
                :class        (if css-class (name css-class))
                :type         :datetime-local
                :defaultValue (format-for-dt-local value)
-               :autoFocus    (:autofocus opts)
+               :autoFocus    autofocus?
                :spellCheck   "false"
                :on-paste     on-paste-internal
                :on-key-down  on-key-down
@@ -127,6 +128,6 @@
           {:css-class  "space-datepicker__input g-focusable"
            :on-change  on-change
            :on-blur    collapse!
-           :autofocus  true
+           :autofocus? true
            :data       {:entity-id eid}
            :value due_date}])])))

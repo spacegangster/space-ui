@@ -21,7 +21,6 @@
     {:height        :28px
      :width         :48px
      :cursor        :pointer
-     :border-radius :2px
      :border        0
      :padding       (sc/px 2)}]
    [:&__reset>.button

@@ -2,7 +2,6 @@
   (:require [clojure.string :as str]
             [space-ui.primitives :as sp]
             [space-ui.style.constants :as sc]
-            [common.functions :as f]
             [space-ui.primitives :as prim]))
 
 
@@ -18,6 +17,13 @@
    :transform        "rotate(-90deg)"
    :will-change      "transform"
    :transition       "transform 180ms cubic-bezier(.47,1.64,.41,.8)"})
+
+(defn bigger-shadow-w-bg [& [shadow-color-cnf bg-color-cnf]]
+  (let [shadow-color-cnf (or shadow-color-cnf {:h 180 :s 30 :l 50 :a 0.3})
+        bg-color-cnf (or bg-color-cnf (update shadow-color-cnf :a #(max 0.1 (if % (- % 0.2) 0.2))))
+        shade-color (prim/map->hsl-string shadow-color-cnf)]
+    {:background (prim/map->hsl-string bg-color-cnf)
+     :box-shadow (str "0px 0px 40px " shade-color)}))
 
 (def display-centerflex
   {:display :flex
@@ -199,7 +205,7 @@
   "mixin defining pane borders and background.
   Also supports hover and focus modifiers."
   (list
-    (f/assign
+    (merge
       pane-frame
       {:background  sc/color-lightable
        :transition  "background .1s ease-in-out"
@@ -222,7 +228,7 @@
   "same as pane but w transparent background
   Also supports hover and focus modifiers"
   (list
-    (f/assign
+    (merge
       pane-frame
       {:background  sc/color-lightable-a--base
        :transition  "background .1s ease-in-out"
@@ -288,6 +294,10 @@
     {:height sc/dim:grid:nav-item-height-px
      :cursor :pointer}
     pane))
+
+(def nav-item--only
+  {:height sc/dim:grid:nav-item-height-px
+   :cursor :pointer})
 
 
 (def pane--opaque

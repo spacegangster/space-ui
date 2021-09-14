@@ -163,8 +163,6 @@
          :color           sc/color-text--placeholders}]
     (into (list own-rules) mm/pane)))
 
-(def nav-item mm/nav-item)
-
 
 (defn glowing-link
   [{:as opts

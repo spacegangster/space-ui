@@ -67,12 +67,14 @@
 
 
 (defn face
-  [{^string label  :comp/label
-    ^js/Date value :comp/value
-    on-change-v    :comp/on-change--value
-    on-submit      :comp/on-submit
-    on-cancel      :comp/on-cancel
-    id-base        :comp/id-base}]
+  [{^string label   :comp/label
+    ^js/Date value  :comp/value
+    autofocus-date? :comp/autofocus-date?
+    autofocus-time? :comp/autofocus-time?
+    on-change-v     :comp/on-change--value
+    on-submit       :comp/on-submit
+    on-cancel       :comp/on-cancel
+    id-base         :comp/id-base}]
   (assert (instance? js/Date value) (str "value must be a date here, got " (type value)))
   (let [[dv tv] [(ld-str value) (lt-str value)]
         atom:date-str (rc/atom dv)
@@ -123,6 +125,8 @@
 
     (fn []
       [:div.space-ui-date-time-2.g-grid-rows.g-gap2
+
+       ; Date
        [:div.space-ui-date-time-2__row.g-grid-rows.g-gap1
         (if label
           [:label.g-margin-bottom-1 [:strong label]])
@@ -136,6 +140,7 @@
            :comp/input-type       (if date-supported? :input.type/date :input.type/text)
            :comp/appearance       :appearance/transparent
            :comp/value            dv
+           :comp/autofocus?       autofocus-date?
            :comp/placeholder      (if-not date-supported? "YYYY-MM-DD")
            :comp/intents          {:intents/commit -on-date-commit}
            :comp/on-change--value (if time-supported?
@@ -146,6 +151,7 @@
           [:div.g-hint "Date like 2020-06-14"])]
 
 
+       ; Time
        [:div.space-ui-date-time-2__row.g-grid-rows.g-gap1
         [:div.g-grid-cols-compact.g-gap2
          [:label.space-ui-date-time-2__row__label
@@ -157,6 +163,7 @@
            :comp/input-type       (if time-supported? :input.type/time :input.type/text)
            :comp/appearance       :appearance/transparent
            :comp/value            tv
+           :comp/autofocus?       autofocus-time?
            :comp/placeholder      (if-not time-supported? "HH:mm")
            :comp/intents          {:intents/commit -on-time-commit}
            :comp/on-change--value (if time-supported?

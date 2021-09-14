@@ -41,6 +41,10 @@
 (defn pc [x] (str (float x) "%"))
 (defn ms [x] (str (float x) "ms"))
 
+(defn glow [glow-radius-px glow-color-hsl]
+  {:box-shadow (str "0 0 " (px glow-radius-px) " "
+                    (map->hsl-string glow-color-hsl))})
+
 (defn rotate-z [deg]
   (str "rotateZ(" deg "deg)"))
 (defn rotate-x [deg]

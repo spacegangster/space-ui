@@ -22,6 +22,7 @@
      ^IFn on-intent
      ^IFn on-key-down
      ^IFn process-paste
+     ^boolean autofocus?
      ^boolean text-mode?
      ^IMap intents]
     :as opts}]
@@ -100,7 +101,7 @@
                  :placeholder                    placeholder,
                  :class                          (if css-class (name css-class))
                  :tabIndex                       1
-                 :autoFocus                      (:autofocus opts)
+                 :autoFocus                      autofocus?
                  :content-editable               true
                  :data-text-mode                 text-mode?
                  :spellCheck                     "false"
