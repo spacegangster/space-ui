@@ -14,5 +14,6 @@ I ask for attribution if you use one of the artistic ccomponents below:
   - space_ui/isometric_preloader.cljc
   - space_ui/pulsating_frames.cljc
   - space_ui/pulsating_frames_2.cljc
+
   Attribution 4.0 International (CC BY 4.0)
   [More info](https://creativecommons.org/licenses/by/4.0/)
