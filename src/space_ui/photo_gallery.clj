@@ -1,4 +1,5 @@
 (ns space-ui.photo-gallery
+  "probably will be moved out of space-ui"
   (:require [common.image :as image]
             [clojure.java.io :as io]
             [cheshire.core :as cheshire]

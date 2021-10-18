@@ -7,8 +7,8 @@
             [space-ui.style.main-mixins :as mm]
             [space-ui.style.mixins-persistence-indication--glow :as mix.status--glow]
             [space-ui.style.constants :as sc]
-            [space-ui.primitives :as prim]
-            [common.functions :as f]))
+            [space-ui.primitives :as prim]))
+
 
 (def display-centerflex mm/display-centerflex)
 (def grid--flow-row mm/grid--flow-row)

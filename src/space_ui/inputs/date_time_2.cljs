@@ -1,8 +1,7 @@
 (ns space-ui.inputs.date-time-2
   "A box with date and time inputs.
    And Save and Cancel buttons"
-  (:require [common.const.gradients :as gradients]
-            ["../util/feature-detect" :refer [isDateSupported isTimeSupported]]
+  (:require ["../util/feature-detect" :refer [isDateSupported isTimeSupported]]
             [garden.core :as garden]
             [reagent.core :as rc]
             [goog.string :as gs]
@@ -190,7 +189,7 @@
         atom:value2 (rc/atom nil)]
     {:dev/card?         true
      :dev.card/label    "Date and Time"
-     :dev.card/gradient (gradients/id->expression :ui.gradient/alive-darker)
+     :dev.card/gradient  "linear-gradient(to right, hsl(338, 59%, 40%), hsl(6, 58%, 37%))"
      :dev.card/category :dev.card.category/inputs
      :dev.card/style-fn (fn [] [:style (garden/css style-rules)])
      :dev.card/face

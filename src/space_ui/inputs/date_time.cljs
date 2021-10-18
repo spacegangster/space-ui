@@ -3,10 +3,9 @@
   (:require [reagent.dom :as r]
             [reagent.core :as rc]
             [goog.string :as gs]
-            [commons.constants.keycodes :as kc]
-            [shared-views.svgs :as svgs]
-            [commons.logging :as log]
-            [commons.dom :as dom]))
+            [space-ui.const.keycodes :as kc]
+            [space-ui.util.dom :as dom]
+            #_[shared-views.svgs :as svgs]))
 
 
 (defn- -data-attrs-mapper [[k v]]
@@ -43,7 +42,7 @@
             (try
               (js/Date. (.-value n))
               (catch js/Error e
-                (log/error e)
+                (js/console.error "date-time err" e)
                 @cur-val))))
 
         on-key-down
@@ -120,7 +119,7 @@
        [:label.space-datepicker__label
         {:for (::input-id @state)
          :on-click toggle-expand!}
-        [svgs/icon :icons/calendar {:on-click toggle-expand!}]]
+        #_[svgs/icon :icons/calendar {:on-click toggle-expand!}]]
        (if (::expanded? @state)
          [datetime-input (::input-id @state)
           {:css-class  "space-datepicker__input g-focusable"

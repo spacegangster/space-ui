@@ -1,8 +1,7 @@
 (ns space-ui.inputs.color
   (:require [reagent.core :as rc]
-            [commons.logging :as log]
-            [space-ui.tiny.btn :as btn]
             [garden.core :as garden]
+            [space-ui.tiny.btn :as btn]
             [space-ui.style.mixins :as mixins]
             [space-ui.style.constants :as sc]))
 

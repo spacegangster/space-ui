@@ -5,7 +5,7 @@
   {:value v, :target t}"
   (:require [reagent.core :as rc]
             [reagent.dom :as rdom]
-            [common.functions :as f]))
+            [space-ui.util.functions :as f]))
 
 
 (defn- -data-attrs-mapper [[k v]]

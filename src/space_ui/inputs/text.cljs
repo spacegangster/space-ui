@@ -6,9 +6,7 @@
   (:require [reagent.core :as rc]
             [reagent.dom :as r]
             [space-ui.ui-logic.user-intents :as user-intents]
-            [commons.logging :as log]
-            [common.functions :as f]
-            [commons.functions :as u]
+            [space-ui.util.functions :as f]
             [space-ui.style.constants :as sc]
             [space-ui.bem :as bem]))
 
@@ -124,16 +122,16 @@
 
         format-fn (cond
                     format-fn format-fn
-                    (= :value-type/vec-of-int value-type) u/format-csv
+                    (= :value-type/vec-of-int value-type) f/format-csv
                     :else identity)
         atom:val (rc/atom (format-fn value))
 
         parse-fn (cond
                    parse-fn parse-fn
-                   (= :value-type/int value-type) u/parse-int-or-nil
-                   (= :value-type/vec-of-int value-type) u/parse-int-csv
+                   (= :value-type/int value-type) f/parse-int-or-nil
+                   (= :value-type/vec-of-int value-type) f/parse-int-csv
                    (= :value-type/float value-type) js/parseFloat
-                   (= :input.type/number input-type) u/parse-int-or-nil
+                   (= :input.type/number input-type) f/parse-int-or-nil
                    :else identity)
 
         get-cur-value #(some-> @atom:node .-value parse-fn)

@@ -1,4 +1,6 @@
-(ns space-ui.inputs.timezone-select
+(ns
+  ^{:deprecated true}
+  space-ui.inputs.timezone-select
   "A very simplistic timezone select.
   Better use something based on @vvo/tzdb"
   (:require [space-ui.const.timezones :as const.tz]))

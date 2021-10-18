@@ -1,6 +1,7 @@
 (ns space-ui.util.dom
   (:require [clojure.string :as s]
             [cljs.reader :as reader]
+            [space-ui.const.keycodes :as kc]
             ["./set-caret-position" :refer [setCaretPosition]]))
 
 (def window js/window)
@@ -228,3 +229,13 @@
    (focus-selector--delayed sel 50))
   ([sel timeout]
    (js/setTimeout #(focus-selector sel) timeout)))
+
+
+(defn evt->keycode-kw [react-evt]
+  (some->> react-evt (^js .-keyCode) kc/kc->kw))
+
+(defn dispatch-on-keycode [dipatch-map evt]
+  (when-let [f (get dipatch-map (evt->keycode-kw evt))]
+    (^js .preventDefault evt)
+    (f evt)))
+

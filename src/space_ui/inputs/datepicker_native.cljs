@@ -6,7 +6,7 @@
             [reagent.core :as rc]
             [space-ui.const.keycodes :as kc]
             [space-ui.bem :as bem]
-            [commons.dom :as dom]))
+            [space-ui.util.dom :as dom]))
 
 (defn format-for-dt-local [^js/Date d]
   (str ""  (.getFullYear d)

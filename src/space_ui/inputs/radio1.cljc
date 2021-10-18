@@ -2,9 +2,7 @@
   (:require [garden.core :as garden]
             [space-ui.util.functions :as ui.f])
   #?(:cljs
-     (:require [commons.logging :as log]
-               [reagent.core :as rc]
-               [commons.functions :as f])))
+     (:require [reagent.core :as rc])))
 
 
 (def style-rules-buttons
