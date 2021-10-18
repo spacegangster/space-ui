@@ -1,0 +1,14 @@
+{
+  "name": "space-ui",
+  "version": "0.4.3",
+  "author": "Ivan Fedorov [spacegangster]",
+  "scripts": {
+  },
+  "dependencies": {
+    "tinycolor2": "^1.4.1"
+  },
+  "devDependencies": {
+    "shadow-cljs": "^2.13.0",
+    "stylus": "^0.54.7"
+  }
+}
