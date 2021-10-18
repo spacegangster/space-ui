@@ -1,4 +1,7 @@
-(ns space-ui.const.temple-colorscheme)
+(ns space-ui.const.temple-colorscheme
+  "colorscheme inspired by the UI from a SciFi short movie Temple
+  original UI designer – Pascal Wicht
+  https://www.youtube.com/watch?v=zrl4i4gnAQM")
 
 (defn- hsl [h s l]
   (str "hsl(" h ", " s "%," l"%)"))

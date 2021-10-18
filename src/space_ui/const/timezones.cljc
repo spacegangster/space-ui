@@ -1,5 +1,8 @@
-(ns space-ui.const.timezones
-  "List of most used timezones from a popular mailing platform")
+(ns
+  ^{:deprecated true}
+  space-ui.const.timezones
+  "List of most used timezones from a popular mailing platform
+  Consider this deprecated, better use a real timezone registry lib")
 
 (def list1
   [{:option/value ""                             :option/label "Use default"}
