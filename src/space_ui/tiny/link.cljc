@@ -144,7 +144,8 @@
   "bordered link"
   [{:link/keys [title on-click class css-class href label attrs goal-id
                 blank? target-blank? outer? colorscheme? underline?
-                main? luminous? active? round?] :as params}]
+                main? luminous? active? round?
+                icon icon-after icon-alt] :as params}]
   (let [css-class
         (-> :link
             (bem/bem-str {:box true :bordered true
@@ -164,7 +165,18 @@
              attrs (->> (merge attrs))
              outer? (assoc :rel "noopener")
              (or outer? target-blank? blank?) (assoc :target "_blank"))
-     label]))
+     (if icon
+       [:div.link__icon
+        {:class (if colorscheme? :g-colorscheme-control-icon)
+         :title icon-alt}
+        icon])
+     (if label
+       [:div.link__label {:class (if icon "link__label--ml")} label])
+     (if icon-after
+       [:div.link__icon.link__icon--after
+        {:class (if colorscheme? :g-colorscheme-control-icon)
+         :title icon-alt}
+        icon-after])]))
 
 
 (defn w-icon

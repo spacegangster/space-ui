@@ -52,9 +52,11 @@
      on-change
      on-change--value
      css-class]
+    ffn :comp.select/format-fn
+    pfn :comp.select/parse-fn
     :as params}]
-  (let [value-transform (ui.f/options->transform options)
-        value-format    (ui.f/options->format options)
+  (let [value-transform (or pfn (ui.f/options->transform options))
+        value-format    (or ffn (ui.f/options->format options))
         ;;
         use-dflt-val?   (contains? params :comp/default-value)
         val-fmt         (if-not use-dflt-val? (value-format value))

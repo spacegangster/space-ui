@@ -64,20 +64,27 @@
    boolean shiftKey
    number which"
   [^js react-evt]
-  (let [t (.-target react-evt)
-        dataset (aget t "dataset")
+  (let [t          (.-target react-evt)
+        dataset    (aget t "dataset")
         keycode-kw (react-evt->keycode-kw react-evt)
+        eid        (dom/evt->entity-id react-evt)
         v (cond
             (#{"INPUT" "TEXTAREA"} (.-tagName t)) (.-value t)
             (aget dataset "textMode") (.-textContent t)
             :else (.-innerHTML t))
         intent (interpret-user-intent v react-evt)]
+
+    (when (= :intents/delete intent)
+      ; to prevent character deletion upon cursor transfer
+      (.preventDefault react-evt))
+
     (when intent
       {:evt/intent     intent
        :evt/keycode-kw keycode-kw
        :evt/value      v
        :evt/target     t
-       :evt/entity-id  (dom/evt->entity-id react-evt)
+       :evt/eid        eid
+       :evt/entity-id  eid
        :evt/data       (some-> dataset dom/dataset->clj-raw)})))
 
 

@@ -17,6 +17,7 @@
 
 (def jsget goog.object/getValueByKeys)
 
+
 (defn get-elem-pos [elem]
   (let [rect (.getBoundingClientRect elem)]
     {:width  (.-width rect)
@@ -100,6 +101,11 @@
 (defn select-all [sel & [ctx]]
   (.querySelectorAll (or ctx js/document) sel))
 
+(defn value-or-content [^js/Element el]
+  (if (#{"INPUT" "TEXTAREA"} (.-tagName el))
+    (.-value el)
+    (.-textContent el)))
+
 (defn get-target-text [evt]
   (.. evt -currentTarget -textContent))
 
@@ -179,25 +185,34 @@
 
 
 
-(defn set-caret-to-start! [el]
+(defn set-caret-to-start! [^js/Element el]
   (setCaretPosition el 0))
 
-(defn set-caret-to-end! [el]
-  (let [content (.-textContent el)
+(defn set-caret-to-end! [^js/Element el]
+  (let [content (value-or-content el)
         cl (.-length content)]
     (setCaretPosition el cl)))
 
+(comment
+  (value-or-content js/window.t1)
+  (set-caret-to-start! js/window.t1)
+  (set-caret-to-end! js/window.t1))
 
-(defn focus-element [el & [^keyword caret-pos]]
+
+(defn focus-element [^js/Element el, & [^keyword caret-pos]]
   (when el
     (try
       (.click el)
       (catch js/Error e nil))
-    (.focus el)
+    (.focus el) ; iOS, and possibly android don't have click, but focus works
     (case caret-pos
       :caret/first (set-caret-to-start! el)
       :caret/last (set-caret-to-end! el)
       nil)))
+
+(comment
+  (focus-element js/window.t1))
+
 
 (defn focus-selector [sel & [^keyword caret-pos]]
   (when-let [el (select-one sel)]

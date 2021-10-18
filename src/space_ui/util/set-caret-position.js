@@ -17,10 +17,12 @@ export function setCaretPosition(elem, caretPos) {
         var range = elem.createTextRange()
         range.move('character', caretPos)
         range.select()
+        return
     }
-    else if (elem.selectionStart) {
+    if (elem.setSelectionRange) {
         elem.focus()
         elem.setSelectionRange(caretPos, caretPos)
+        return
     } else {
         setCaretPosition__contenteditable(elem, caretPos)
     }
