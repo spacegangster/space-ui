@@ -123,13 +123,20 @@
   #{:input.type/password :input.type/text :input.type/select :input.type/email})
 
 (defn face
+  "Displays line with label and input.
+
+   Layouts:
+   - mobile (narrower than 500px) – label on top, input at the bottom
+   - desktop (wider than 500px) – label on the left, input on the right"
   [{input-name :comp/name
     :comp/keys
     [on-blur on-blur-capture on-reset
-     on-change on-change-complete
+     on-change           ; (fn [{:evt/keys [value target]}])
+     on-change-complete  ; (fn [{:evt/keys [value target]}])
+     on-change--value    ; (fn [value])
      ^string id
      ^string css-class
-     label
+     label ; string or hiccup block
      ^keyword appearance
      ^string placeholder
      ^boolean read-only?
@@ -158,6 +165,7 @@
                 :comp/placeholder        placeholder
                 :comp/appearance         appearance
                 :comp/on-change          on-change
+                :comp/on-change--value   on-change--value
                 :comp/on-change-complete on-change-complete
                 :comp/name               input-name}
                input-attrs (assoc :comp/attrs input-attrs))])

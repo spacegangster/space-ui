@@ -26,6 +26,8 @@ Browse namespaces, require a namespace, use `face`
 ## Whys
 I want my components to have options / parameters as maps.
 I also want these maps keys to be namespaced.
+I don't see this in re-com.
+Also I think CSS Grid is more expressive than Flexbox, but I haven't docmented layout classes yet.
 
 
 ## Docs

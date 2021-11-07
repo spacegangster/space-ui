@@ -4,9 +4,9 @@
             [space-ui.const.keycodes :as kc]
             ["./set-caret-position" :refer [setCaretPosition]]))
 
-(def window js/window)
-(def doc js/document)
-(def doc-el js/document.documentElement)
+(def ^js window ^js js/window)
+(def ^js doc ^js js/document)
+(def ^js doc-el ^js js/document.documentElement)
 (def day-millis (* 86400 1000))
 (def str->id js/parseInt)
 
@@ -201,6 +201,12 @@
 
 
 (defn focus-element [^js/Element el, & [^keyword caret-pos]]
+  ;(js/console.log (pr-str ::act-el) js/document.activeElement)
+  (if-not el
+    (js/console.warn "space-ui/focus-element: no element is passed"))
+  ; will help you diagnose your focus errors faster
+  (if (and (not= el doc-el) (not (.contains doc-el el)))
+    (js/console.error "space-ui/focus-element: passed element isn't in the DOM", el))
   (when el
     (try
       (.click el)

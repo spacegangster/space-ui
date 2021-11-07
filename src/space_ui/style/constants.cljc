@@ -211,11 +211,6 @@
 (def dim-entry-side-pad          "step x 2"  (d-step-x 2))
 (def dim-entry-side-pad--mobile  "step"   (d-step-x 1))
 (def dim-entry-side-pad--mobile-px   (px dim-entry-side-pad--mobile))
-(def dim-note-grid-upper-section-px  (d-step-x-px 3))
-(def dim-note-grid-lower-section-px  (d-step-x-px 5))
-(def dim-note-grid-left-section-px   (px dim-entry-side-pad))
-(def dim-note-grid-right-section  dim-entry-side-pad)
-(def dim-note-grid-right-section-px  (px dim-note-grid-right-section))
 
 (def dim-spacing--outmost-pad dim-grid-halfstep-px)
 

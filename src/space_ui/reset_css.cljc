@@ -27,8 +27,9 @@
   button {
     letter-spacing: inherit;
   }
-  body {
+  html, body {
     line-height: 1;
+    border-radius: 0;
   }
   ol, ul {
     list-style: none;
