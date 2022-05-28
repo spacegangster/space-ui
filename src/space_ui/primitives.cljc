@@ -61,6 +61,10 @@
 (defn translate-y [px]
   (str "translateY(" (autopx px) ")"))
 
+(defn translate-xy [x y]
+  (str "translate(" (autopx x) ", " (autopx y) ")"))
+
+
 (defn square [d]
   {:width d
    :height d})
