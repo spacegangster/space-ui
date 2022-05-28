@@ -58,7 +58,9 @@
 (defn calc-evt-path-js [evt]
   (or (.-path evt)
       (and (.-composedPath evt)
-           (.composedPath evt))))
+           (.composedPath evt))
+      (if-let [native-event (.-nativeEvent evt)]
+        (calc-evt-path-js native-event))))
 
 (defn has-class? [elem class-name]
   (some-> elem (.-classList) (.contains class-name)))
@@ -75,9 +77,25 @@
   (let [x (js/parseInt v)]
     (if (js/isNaN x) nil x)))
 
+(defn elem->eid-raw [^js/Element elem]
+  (jsget elem "dataset" "entityId"))
+
 (defn parse-elem-eid [^js/Element elem]
-  (let [eid-raw (jsget elem "dataset" "entityId")]
+  (let [eid-raw (elem->eid-raw elem)]
     (or (parse-int-or-nil eid-raw) eid-raw)))
+
+(defn- -reduce-find-data-entity-id [_ el]
+  (if (elem->eid-raw el)
+    (reduced el)))
+
+(defn react-evt->evt-basics
+  "oh the most advanced helper that will find an element with data-entity-id in path
+  and take entity-id and idx from its dataset"
+  [react-evt]
+  (let [path   (-> (calc-evt-path-js react-evt) js->clj)
+        target (reduce -reduce-find-data-entity-id nil path)]
+    {:evt/eid (parse-elem-eid target)
+     :evt/idx (some-> (jsget target "dataset" "idx") parse-int-or-nil)}))
 
 (defn evt->entity-id [^js evt]
   (parse-elem-eid (.-currentTarget evt)))
