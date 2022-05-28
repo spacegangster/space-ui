@@ -1,6 +1,5 @@
 (ns space-ui.tiny.btn
   (:require [space-ui.bem :as bem]
-            [space-ui.tiny.link]
             [space-ui.style.main-mixins :as mm]
             [space-ui.style.constants :as sc]
             [space-ui.primitives :as prim]
@@ -84,7 +83,7 @@
   [:button.btn
    (cond-> {:class        (str (bem/bem-str :btn mods) " " css-class)
             :title        (or title tooltip)
-            on-click-prop (or on-click (space-ui.tiny.link/calc-reach-goal goal-id))
+            on-click-prop on-click
             :data-goal-id goal-id
             :tabIndex     tabindex
             :type         type}

@@ -3,12 +3,17 @@
             [space-ui.style.constants :as sc]
             [space-ui.svgs :as svgs]
             [space-ui.primitives :as prim]
-            [garden.stylesheet :as gs]
-            [clojure.string :as str]))
+            [garden.stylesheet :as gs]))
 
+
+;; attributes statement for autocompletion
 :link/title :link/on-click :link/class :link/href :link/label :link/attrs :link/goal-id
 :link/blank? :link/target-blank? :link/outer? :link/colorscheme? :link/underline?
 :link/main? :link/luminous? :link/active?
+
+
+(def on-click-prop #?(:cljs :on-click :clj :onclick))
+(def top-right-arrow "⇗")
 
 (def color-text--off (prim/hsl 0 0 93))
 (def color-text--stage-1 (prim/hsl 0 0 99))
@@ -73,22 +78,6 @@
        :border "1px solid white"}]]))
 
 
-
-(defn calc-reach-goal [goal-id]
-  (when goal-id
-    (let [goal-id-for-ym (-> (str goal-id) (str/replace #"^:" "") (str/replace #"/" "."))]
-      #?(:clj  (str "reach_goal('" goal-id-for-ym "', event)")
-         :cljs nil))))
-
-(def on-click-prop #?(:cljs :on-click :clj :onclick))
-
-(comment
-  "reach_goal('w.goals.landing/try-demo--deep')"
-  (calc-reach-goal nil)
-  (calc-reach-goal :w.goals.landing/try-demo--deep))
-
-(def top-right-arrow "⇗")
-
 (defn inline
   "Plain link"
   [{:link/keys [title on-click class href label attrs goal-id
@@ -100,14 +89,13 @@
             (str (if active? " g-active")
                  (if (not= false underline?) " g-underline")
                  (if colorscheme? " g-colorscheme-control-text")
-                 (if class (str " " (name class)))))
-        on-click (or on-click (calc-reach-goal goal-id))]
+                 (if class (str " " (name class)))))]
     [:a.g-nolink
-     (cond-> {:href href
-              :title            title
-              :data-goal-id     goal-id
-              on-click-prop     on-click
-              :class            css-class}
+     (cond-> {:href         href
+              :title        title
+              :data-goal-id goal-id
+              on-click-prop on-click
+              :class        css-class}
              attrs (->> (merge attrs))
              outer? (assoc :rel "noopener")
              (or outer? target-blank? blank?) (assoc :target "_blank"))
@@ -127,13 +115,13 @@
             (str (if active? " g-active")
                  (if underline? " g-underline")
                  (if colorscheme? " g-colorscheme-control-text")
-                 (if class (str " " (name class)))))
-        on-click (or on-click (calc-reach-goal goal-id))]
+                 (if class (str " " (name class)))))]
     [:a.g-nolink
-     (cond-> {:href href :title title
+     (cond-> {:href         href
+              :title        title
               :data-goal-id goal-id
               on-click-prop on-click
-              :class css-class}
+              :class        css-class}
              attrs (->> (merge attrs))
              outer? (assoc :rel "noopener")
              (or outer? target-blank? blank?) (assoc :target "_blank"))
@@ -155,13 +143,13 @@
                  (if underline? " g-underline")
                  (if colorscheme? " g-colorscheme-control-text g-colorscheme-control-border")
                  (if class (str " " (name class)))
-                 (if css-class (str " " (name css-class)))))
-        on-click (or on-click (calc-reach-goal goal-id))]
+                 (if css-class (str " " (name css-class)))))]
     [:a.g-nolink
-     (cond-> {:href href :title title
+     (cond-> {:href         href
+              :title        title
               :data-goal-id goal-id
               on-click-prop on-click
-              :class css-class}
+              :class        css-class}
              attrs (->> (merge attrs))
              outer? (assoc :rel "noopener")
              (or outer? target-blank? blank?) (assoc :target "_blank"))
@@ -193,11 +181,10 @@
             (str (if active? " g-active")
                  (if underline? " g-underline")
                  (if colorscheme? " g-colorscheme-control-text")
-                 (if class (str " " (name class)))))
-        on-click (or on-click (calc-reach-goal goal-id))]
+                 (if class (str " " (name class)))))]
     [:a.g-nolink
      (cond-> {:href         href
-              :title title
+              :title        title
               on-click-prop on-click
               :class        css-class}
              attrs (->> (merge attrs))
