@@ -1,14 +1,10 @@
 (ns space-ui.contenteditable
   (:require [reagent.dom :as r]
             [reagent.core :as rc]
-            [space-ui.ui-logic.user-intents :as user-intents]))
+            [space-ui.util.dom :as dom]
+            [space-ui.ui-logic.user-intents :as user-intents]
+            [space-ui.bem :as vu]))
 
-
-(defn- -data-attrs-mapper [[k v]]
-  (vector (str "data-" (name k)) v))
-
-(defn- render-data-attrs [hmap]
-  (into {} (map -data-attrs-mapper hmap)))
 
 ; text mode atttr
 
@@ -48,9 +44,9 @@
           (fn [evt]
             (let [cur-val (get-cur-value)]
               (when (not= cur-val @state-value)
-                (on-change {:value  cur-val :target @node})))))
+                (on-change {:value cur-val :target @node})))))
 
-        on-input on-key-up-internal
+        on-input    on-key-up-internal
 
         on-blur-internal
         (fn [evt]
@@ -74,41 +70,44 @@
       {:display-name "SpaceUI_ContentEditable"
 
        :component-did-mount
-         (fn [this]
-           (let [dn (r/dom-node this)]
-             (if on-did-mount
-               (on-did-mount dn))
-             (reset! node dn)))
+       (fn [this]
+         (let [dn (r/dom-node this)]
+           (if on-did-mount
+             (on-did-mount dn))
+           (reset! node dn)))
 
        :should-component-update
-         (fn [this cur-argv [f id next-props :as next-argv]]
-           (let [active-element js/document.activeElement
-                 not-active?     (not= @node active-element)]
-             (and not-active? (not= (get-cur-value) (:value next-props)))))
+       (fn [this cur-argv [f id next-props :as next-argv]]
+         (let [active-element js/document.activeElement
+               not-active?    (not= @node active-element)]
+           (and not-active? (not= (get-cur-value) (:value next-props)))))
 
        :reagent-render
-         (fn [id {:keys [data ; @param {map} with data attributes
-                         on-blur on-focus
-                         placeholder css-class value] :as opts}] ;; remember to repeat parameters
-           (reset! state-value value)
-           (let [id-str (if (keyword? id) (name id) (str id))
-                 data-attrs (render-data-attrs data)]
-             [:div.contenteditable
-              (cond->
-                {:id                             id-str,
-                 :suppressContentEditableWarning true
-                 :dangerouslySetInnerHTML        {:__html value}
-                 :placeholder                    placeholder,
-                 :class                          (if css-class (name css-class))
-                 :tabIndex                       1
-                 :autoFocus                      autofocus?
-                 :content-editable               true
-                 :data-text-mode                 text-mode?
-                 :spellCheck                     "false"
-                 :on-key-up                      on-key-up-internal
-                 :on-paste                       on-paste-internal
-                 :on-input                       on-input
-                 :on-key-down                    on-key-down
-                 :on-focus                       on-focus
-                 :on-blur                        on-blur-internal}
-                data-attrs (merge data-attrs))]))})))
+       (fn [id {:keys [data                                 ; @param {map} with data attributes
+                       on-blur on-focus
+                       placeholder css-class value mods field-name] :as opts}] ;; remember to repeat parameters
+         (reset! state-value value)
+         (let [id-str          (if (keyword? id) (name id) (str id))
+               data-attrs      (dom/render-data-attrs data)
+               css-class-final (str (vu/bem-str :contenteditable mods) "" css-class)]
+           (def css-class)
+           [:div.contenteditable
+            (cond->
+              {:id                             id-str,
+               :suppressContentEditableWarning true
+               :dangerouslySetInnerHTML        {:__html value}
+               :placeholder                    placeholder,
+               :class                          css-class-final
+               :tabIndex                       1
+               :autoFocus                      autofocus?
+               :content-editable               true
+               :data-text-mode                 text-mode?
+               :spellCheck                     "false"
+               :on-key-up                      on-key-up-internal
+               :on-paste                       on-paste-internal
+               :on-input                       on-input
+               :on-key-down                    on-key-down
+               :on-focus                       on-focus
+               :on-blur                        on-blur-internal
+               :data-name                      field-name}
+              data-attrs (merge data-attrs))]))})))
