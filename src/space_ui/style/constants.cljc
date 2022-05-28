@@ -7,6 +7,7 @@
 ;;;;; Colors ;;;;;
 
 (def color-text--placeholders (prim/hsl  0,  0, 40))
+(def color-text--placeholders2 (prim/hsl 0,  0, 60))
 (def col-fg--secondary (prim/hsl  0,  0, 60))
 (def color-root-menu          (prim/hsla 0, 20, 94, 0.93))
 
@@ -174,6 +175,10 @@
    (str/join " " (cons (d-step-x-px r1 r2 r3 r4)
                        (map d-step-x-px step-values)))))
 
+(def step-x
+  "Alias for d-step-x-px"
+  d-step-x-px)
+
 (defn dims [& vals]
   (str/join " " (mapv (comp autopx prim/autoname) vals)))
 
@@ -307,19 +312,27 @@
 
 (def mq-larger-than-ipad--diag
   "media queries for devices smaller than ipad (landscape mode)"
+  ; not used in client
   [{:min-width dim-bp-ipad-width--landscape-px
     :min-height dim-bp-ipad-height--landscape-px}])
 
 (def mq-fullscreen-branches-on
-  "media queries when fullscreen branches should be on (mobile mode)"
+  "media queries when fullscreen branches should be on (mobile mode) (width <= 768px)"
   [{:max-width dim-bp-mobile-px}])
 
 (def mq:iphone-x-or-wider
+  "width >= 375"
   [{:min-width (px dim-iphone-x-width)}])
 
 (def mq:wider-than-ipad-portrait
-  "wider than ipad portrait (mobile tabs off)"
+  "wider than ipad portrait (width > 768px) (mobile tabs off)"
   [{:min-width (px (inc dim-bp-mobile))}])
+
+(def mq:wider-than-ipad-portrait-but-short
+  "Weird window configuration when it's a bit wider than ipad, yet short"
+  [{:min-width  (px (inc dim-bp-mobile))
+    :max-width  dim-bp-ipad-width--landscape-px
+    :max-height (px 750)}])
 
 
 (def mq:ipad-landscape-or-wider
