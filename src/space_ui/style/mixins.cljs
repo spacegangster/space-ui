@@ -267,6 +267,8 @@
 (def placeholded
   [["&:empty::before"
     {:content "attr(placeholder)"
-     :color c/color-text--placeholders}]
+     #_ #_
+     :color c/color-text--placeholders
+     :color c/color-text--placeholders2}]
    ["&:focus:empty::before"
     {:content ""}]])
