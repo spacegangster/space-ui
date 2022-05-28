@@ -24,19 +24,29 @@ Browse namespaces, require a namespace, use `face`
 
 
 ## Whys
-I want my components to have options / parameters as maps.
-I also want these maps keys to be namespaced.
-I don't see this in re-com.
-Also I think CSS Grid is more expressive than Flexbox, but I haven't docmented layout classes yet.
+- I want my components to have options / parameters as maps.
+- I also want these maps keys to be namespaced.
+- I don't see this in re-com.
+- I want Grid CSS system with classes and modifiers
+Also I think CSS Grid is more expressive than Flexbox, but I haven't documented layout classes yet.
 
 
 ## Docs
 General docs are yet to be done.
 But I've tried to leave good docstrings for every component.
 
+You can see it in action in Lightpad.ai UI.
+
 
 ## Support me
-Hey I'm using it myself for my projects. You can buy a subscription on Lightpad.ai to support me.
+Hey I'm using it myself for my projects, then update these docs during the rare moments of pure bliss.
+
+BTC 1EzwGRMQwZy8hooLJL2X2QfhTZfpk4xhPD
+ETH 0x9B714c5e3FF1b4a52f937A831d61e88a0D4A95E0
+
+Support me and I'll do the docs and demo, thanks.
+
+You can also buy a subscription on Lightpad.ai to support me.
 
 
 ## License
