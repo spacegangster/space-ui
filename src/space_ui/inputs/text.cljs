@@ -2,7 +2,9 @@
   "Text input supporting various :type attr values
 
   On change emits value evt
-  {:evt/value v, :evt/target t}"
+  {:evt/value v, :evt/target t}
+
+  Supports validation (async only) via validate function"
   (:require [reagent.core :as rc]
             [reagent.dom :as r]
             [space-ui.ui-logic.user-intents :as user-intents]
@@ -108,6 +110,12 @@
      ^keyword input-type
      ^keyword appearance
      ^IMap intents
+
+     ^IFn validate ; async validation (fn [parsed-value on-validated])
+     ; on-validated (fn [:err/code value]) if no err – then pass nil as err-code
+     ; if validate is supplied – on-change will be called only after validate called on-validated with nil
+       ; as in (on-validated nil) or (on-validated)
+
      ^IFn on-change
      ^IFn on-change--value
      ^IFn parse-fn
@@ -118,13 +126,13 @@
      ^IFn process-paste]
     :as opts}]
 
-  (let [atom:node (rc/atom nil)
-
-        format-fn (cond
+  (let [format-fn (cond
                     format-fn format-fn
                     (= :value-type/vec-of-int value-type) f/format-csv
                     :else identity)
-        atom:val (rc/atom (format-fn value))
+
+        atom:node (rc/atom nil)
+        atom:val  (rc/atom (format-fn value))
 
         parse-fn (cond
                    parse-fn parse-fn
@@ -151,7 +159,7 @@
           (if on-change-complete
             (on-change-complete (get-value-evt))))
 
-        on-input
+        on-input--main
         (fn [evt]
           (let [e (get-value-evt)
                 v (:evt/value e)]
@@ -162,7 +170,24 @@
               (if on-change--value
                 (on-change--value v)))))
 
-        on-paste-internal
+        on-input--validated
+        (fn [err-status value]
+          (if-not err-status
+            (let [e (-> (get-value-evt) (assoc :evt/value value))]
+              (when (not= value @atom:val)
+                (reset! atom:val value)
+                (if on-change
+                  (on-change e))
+                (if on-change--value
+                  (on-change--value value))))))
+
+        on-input
+        (if validate
+          (fn [^js evt]
+            (validate (get-cur-value) on-input--validated))
+          on-input--main)
+
+        on-paste-internal--main
         (if on-change
           (fn [evt]
             (let [cur-v (get-cur-value)]
@@ -172,6 +197,12 @@
                                         cur-v)]
                   (on-change {:evt/value  paste-processed
                               :evt/target @atom:node}))))))
+
+        on-paste-internal
+        (if validate
+          (fn [^js evt]
+            (validate (get-cur-value) on-paste-internal--main))
+          on-paste-internal--main)
 
         appearance (or appearance :appearance/text-on-pane-v1)
         css-class-base (bem/bem-str class:base appearance)]
